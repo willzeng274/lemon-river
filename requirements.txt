@@ -1,2 +1,6 @@
 ollama==0.4.7
 python-dotenv==1.0.1
+sounddevice==0.5.1
+wavio==0.0.9
+mlx-whisper==0.4.2
+numpy==2.1.3
