@@ -1,0 +1,4 @@
+# For my custom ripgrep setup
+
+venv/
+__pycache__/
