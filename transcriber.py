@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def run_transcriber(logger, window_queue):
+def run_transcriber(logger):
     """
     Transcribes audio recordings and sends them to LLM processor.
     """
