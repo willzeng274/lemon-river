@@ -27,6 +27,13 @@ class CommandType(Enum):
     ADD_ANSWER = "ADD_ANSWER"
     ADD_NOTE = "ADD_NOTE"
     ADD_CHECK_URL = "ADD_CHECK_URL"
+    # Aliases
+    ADD_LINK = "ADD_LINK"
+    ADD_NOTES = "ADD_NOTES"
+    ADD_ROLE = "ADD_ROLE"
+    ADD_JOB_TITLE = "ADD_JOB_TITLE"
+    ADD_NODES = "ADD_NODES"
+    UNKNOWN = "UNKNOWN"
 
 
 def process_command(command_type: CommandType, reasoning: str) -> Dict[str, Any]:
@@ -218,13 +225,15 @@ class CommandExecutor:
         logger.debug("Clipboard content: %s", clipboard_content)
 
         if (
-            command_type == CommandType.ADD_URL
+            command_type == CommandType.ADD_URL or command_type == CommandType.ADD_LINK
         ) and clipboard_content:
             logger.info("Processing ADD_URL command")
             self.show_window({"type": "update_url", "url": clipboard_content})
 
         elif (
             command_type == CommandType.ADD_TITLE
+            or command_type == CommandType.ADD_ROLE
+            or command_type == CommandType.ADD_JOB_TITLE
         ) and clipboard_content:
             logger.info("Processing ADD_TITLE command")
             self.show_window({"type": "update_title", "title": clipboard_content})
@@ -257,6 +266,8 @@ class CommandExecutor:
 
         elif (
             command_type == CommandType.ADD_NOTE
+            or command_type == CommandType.ADD_NOTES
+            or command_type == CommandType.ADD_NODES
         ) and clipboard_content:
             logger.info("Processing ADD_NOTE command")
             self.show_window({"type": "update_note", "note": clipboard_content})
