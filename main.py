@@ -9,8 +9,8 @@ import sys
 from queue import Queue
 from dotenv import load_dotenv
 
-from listener import stream_record
-from transcriber import run_transcriber
+from voice.listener import stream_record
+from voice.transcriber import run_transcriber
 
 def setup_logging(name):
     """
