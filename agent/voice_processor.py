@@ -9,7 +9,7 @@ from collections import deque
 from dotenv import load_dotenv
 
 from llm import OllamaClient, OllamaModelConfig
-from command_handler import CommandExecutor
+from agent.command_handler import CommandExecutor
 
 load_dotenv()
 
