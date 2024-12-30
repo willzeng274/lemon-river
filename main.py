@@ -6,11 +6,14 @@ import multiprocessing
 import logging
 import os
 import sys
-from queue import Queue
 from dotenv import load_dotenv
 
+# pylint: disable=no-name-in-module
+from PyQt6.QtWidgets import QApplication
 from voice.listener import stream_record
 from voice.transcriber import run_transcriber
+from gui.job_window import JobApplicationWindow
+
 
 def setup_logging(name):
     """
@@ -24,6 +27,7 @@ def setup_logging(name):
 
     return logging.getLogger(name)
 
+
 def run_listener(logger):
     """
     Run the audio listener process.
@@ -35,10 +39,12 @@ def run_listener(logger):
     except Exception as e:
         logger.error(f"Error in listener process: {str(e)}", exc_info=True)
 
+
 def main():
     """
-    Main entry point
+    Main entry point.
     """
+    # Load environment variables at the start
     load_dotenv()
 
     logger = setup_logging("main")
@@ -46,10 +52,17 @@ def main():
 
     logger.debug("Logging directory: %s", os.path.abspath("logs"))
 
+    window_queue = multiprocessing.Queue()
+    logger.info("Created communication queues")
+
+    app = QApplication(sys.argv)
+    _window = JobApplicationWindow(window_queue)
+    logger.info("Created Qt window")
+
     processes = [
         multiprocessing.Process(target=run_listener, args=(setup_logging("listener"),)),
         multiprocessing.Process(
-            target=run_transcriber, args=(setup_logging("transcriber"))
+            target=run_transcriber, args=(setup_logging("transcriber"), window_queue)
         ),
     ]
 
@@ -58,11 +71,7 @@ def main():
         logger.info("Started process %s", process.name)
 
     try:
-        while True:
-            for process in processes:
-                if not process.is_alive():
-                    logger.error("Process %s has died", process.name)
-                    sys.exit(1)
+        app.exec()
     except KeyboardInterrupt:
         logger.info("Received keyboard interrupt, shutting down...")
         for process in processes:

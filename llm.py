@@ -33,6 +33,8 @@ class OllamaClient:
         self.logger = logging.getLogger(__name__)
         self._messages = [{"role": "system", "content": config.system_prompt}]
  
+    # This is actually not used in the codebase
+    # keeping it here for testing purposes
     def complete(self, text: str) -> Dict[str, Any]:
         """
         Generate a completion for the given text.
