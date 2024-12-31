@@ -8,20 +8,28 @@ from typing import Optional, Dict, Any
 
 from dotenv import load_dotenv
 from ollama import chat
+from utils import setup_process_logging, Config
 
 load_dotenv()
+
 
 @dataclass
 class OllamaModelConfig:
     """
-    Config for all Ollama models
+    Config for the Ollama Model.
     """
 
-    model: str = "llama3.2"
-    temperature: float = 0.9
+    model: str = Config.llm_model()
+    # model: str = "qwen2.5:3b"
+    # model: str = "llama3-groq-tool-use"
+
+    # these will be overridden by the command handler
+    # this is only here to show an example
+    temperature: float = 0.6
     max_tokens: Optional[int] = 4096
-    top_p: float = 0.9
+    top_p: float = 0.95
     system_prompt: str = "You are a helpful assistant."
+
 
 class OllamaClient:
     """
@@ -30,37 +38,34 @@ class OllamaClient:
 
     def __init__(self, config: OllamaModelConfig):
         self.config = config
+        setup_process_logging()
         self.logger = logging.getLogger(__name__)
         self._messages = [{"role": "system", "content": config.system_prompt}]
- 
-    # This is actually not used in the codebase
-    # keeping it here for testing purposes
+
     def complete(self, text: str) -> Dict[str, Any]:
         """
-        Generate a completion for the given text.
+        Completes text using the LLM.
         """
-        self.logger.info("Generating completion for text: %s", text)
+        self.logger.info("Generating text for input: %s", text)
         try:
             self._messages.append({"role": "user", "content": text})
             response = chat(
                 model=self.config.model,
-                messages=self.messages,
+                messages=self._messages,
                 options={
                     "temperature": self.config.temperature,
-                    "max_tokens": self.config.max_tokens,
+                    "num_predict": self.config.max_tokens,
                     "top_p": self.config.top_p,
-                }
+                },
             )
             self._messages.append(response["message"])
-            # return raw so I can do more processing
             return response
         except Exception as e:
-            self.logger.exception("Error generating completion: %s", e)
-            # raise is probably better than just eating it
-            # because template responses are not very helpful
+            self.logger.error("Error generating text: %s", str(e), exc_info=True)
             raise
+
 
 if __name__ == "__main__":
     client = OllamaClient(OllamaModelConfig())
-    response = client.complete("Hello, how are you?")
+    response = client.complete("What is love? Baby don't hurt me.")
     print(response["message"]["content"])

@@ -7,6 +7,12 @@ __pycache__/
 *.pyz
 venv/
 
+# Recording files
+recordings/*
+
+# Logs
+logs/*
+
 # Environment variables
 .env
 
@@ -16,3 +22,17 @@ __MACOSX/
 
 # Git
 .git/
+
+# Playing around with Qt
+playground/
+
+# PyInstaller
+*.spec
+*.manifest
+*.spec.py
+entitlements.plist
+runtime_hook.py
+
+# PyInstaller build
+dist/
+build/

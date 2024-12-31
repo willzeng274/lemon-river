@@ -10,12 +10,13 @@ from dotenv import load_dotenv
 
 from llm import OllamaClient, OllamaModelConfig
 from agent.command_handler import CommandExecutor
+from utils import Config
 
 load_dotenv()
 
-ACTIVATION_PHRASE = "lemon river"
-DEACTIVATION_PHRASE = "lemon sneeze"
-SAVE_PHRASE = "lemon save"
+ACTIVATION_PHRASE = Config.activation_phrase()
+DEACTIVATION_PHRASE = Config.deactivation_phrase()
+SAVE_PHRASE = Config.save_phrase()
 
 
 class VoiceProcessor:
@@ -55,7 +56,7 @@ def process_transcriptions(queue: Queue, window_queue: Queue, logger: logging.Lo
     logger.info("Starting LLM processor")
     processor = VoiceProcessor(window_queue=window_queue)
     
-    timeout = 5.0
+    timeout = Config.get_float("PROCESS_TIMEOUT", 5.0)
 
     while True:
         try:

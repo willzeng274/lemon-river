@@ -6,24 +6,29 @@ Uses MLX Whisper for transcription.
 import glob
 import os
 import time
-from multiprocessing import Queue
+from multiprocessing import Process, Queue
 import mlx_whisper
 from dotenv import load_dotenv
+from utils import setup_process_logging, Config
+from agent.voice_processor import process_transcriptions
 
 load_dotenv()
 
 
-def run_transcriber(logger):
+def run_transcriber(logger, window_queue):
     """
-    Transcribes audio recordings and sends them to LLM processor.
+    Transcribes audio recordings and sends them to LLM processor via queue.
     """
+    setup_process_logging()
 
-    transcription_queue = Queue(maxsize=0)
-    
-    # TODO - Implement LLM processor with transcription_queue
+    transcription_queue = Queue(maxsize=Config.max_queue_size())
+    processor = Process(
+        target=process_transcriptions, args=(transcription_queue, window_queue, logger)
+    )
+    processor.start()
 
     logger.info("Starting transcriber")
-    recordings_dir = os.path.join("./recordings", "*")
+    recordings_dir = os.path.join(Config.recordings_dir(), "*")
     transcribed = set()
 
     try:
@@ -62,8 +67,8 @@ def run_transcriber(logger):
     except Exception as e:
         logger.error(f"Transcriber error: {str(e)}", exc_info=True)
     finally:
-        # Notify the LLM processor to stop
-        pass
+        processor.terminate()
+        processor.join()
 
 
 if __name__ == "__main__":

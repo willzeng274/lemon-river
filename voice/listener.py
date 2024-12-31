@@ -10,13 +10,15 @@ from collections import deque
 import sounddevice as sd
 import numpy as np
 import wavio as wv
+from utils import setup_process_logging, Config
 
-SAMPLE_RATE = 44100
-CHUNK_DURATION = 0.5
+# imported from .env
+SAMPLE_RATE = Config.audio_recording_sample_rate()
+CHUNK_DURATION = Config.audio_chunk_duration()
 CHUNK_SIZE = int(SAMPLE_RATE * CHUNK_DURATION)
-SILENCE_THRESHOLD = 0.01
-SILENCE_DURATION = 1.5
-RECORDINGS_DIR = "./recordings"
+SILENCE_THRESHOLD = Config.audio_silence_threshold()
+SILENCE_DURATION = Config.audio_silence_duration()
+RECORDINGS_DIR = Config.recordings_dir()
 
 os.makedirs(RECORDINGS_DIR, exist_ok=True)
 
@@ -28,6 +30,7 @@ def rms(data):
 
 def stream_record(logger):
     """Stream audio from the microphone and save it to a WAV file."""
+    setup_process_logging()
 
     buffer = deque(maxlen=int(SILENCE_DURATION / CHUNK_DURATION))
     full_buffer = []
@@ -73,7 +76,7 @@ def stream_record(logger):
         channels=1, 
         samplerate=SAMPLE_RATE, 
         blocksize=CHUNK_SIZE,
-        device=None,
+        device=Config.microphone_index()
     ):
         try:
             sd.sleep(sys.maxsize)

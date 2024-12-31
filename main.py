@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import QApplication
 from voice.listener import stream_record
 from voice.transcriber import run_transcriber
 from gui.job_window import JobApplicationWindow
+from utils import setup_process_logging
 
 
 def setup_logging(name):
@@ -24,7 +25,8 @@ def setup_logging(name):
     
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
-
+        
+    setup_process_logging(level=log_level)
     return logging.getLogger(name)
 
 
