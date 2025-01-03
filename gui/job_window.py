@@ -579,6 +579,55 @@ class JobApplicationWindow(DraggableWindow):
         except Exception as e:
             logger.error("Error processing window command: %s", e)
 
+    def save_application(self):
+        """Save the current application to the database"""
+        from db.adapter import DatabaseAdapter
+
+        if not self.current_application.metadata.url and not self.current_application.metadata.role:
+            logger.info("Skipping save: application is empty")
+            return
+
+        if not self.current_application.metadata.created_at:
+            self.current_application.metadata.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        db = DatabaseAdapter("db/applications.db")
+
+        try:
+            logger.info("Adding new application")
+            logger.info("Application: company=%s, role=%s", 
+                       getattr(self.current_application.metadata, 'company', 'N/A'),
+                       getattr(self.current_application.metadata, 'role', 'N/A'))
+            app_id = db.add_application(self.current_application)
+            if app_id:
+                logger.info("Successfully added new application with ID: %s", app_id)
+            else:
+                logger.error("Failed to add new application")
+        finally:
+            db.close()
+
+        self.current_application = Application(
+            metadata=ApplicationMetadata(
+                url="",
+                role="",
+                company="",
+                location="",
+                duration="",
+                description="",
+                questions=[],
+                notes="",
+                check_url="",
+            )
+        )
+
+        old_card = self.findChild(ApplicationCard)
+        if old_card:
+            old_card.setParent(None)
+
+        scroll = self.findChild(QScrollArea)
+        if scroll:
+            new_card = ApplicationCard(self.current_application)
+            scroll.setWidget(new_card)
+
 
 if __name__ == "__main__":
     app = QApplication([])
