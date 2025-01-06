@@ -24,6 +24,7 @@ from PyQt6.QtCore import Qt, QTimer
 
 from gui.dataclasses import Application, ApplicationMetadata
 from gui.widgets import PlainPasteLineEdit, PlainPasteTextEdit, JobQAListWidget, LockableField, SectionLabel, DraggableWindow
+from gui.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
@@ -273,7 +274,7 @@ class ApplicationCard(QFrame):
 class JobApplicationWindow(DraggableWindow):
     """Main window for displaying all job applications"""
 
-    def __init__(self, command_queue: multiprocessing.Queue):
+    def __init__(self, command_queue: multiprocessing.Queue, main_window: MainWindow):
         super().__init__()
         self.command_queue = command_queue
         self.current_application = Application(
@@ -289,6 +290,7 @@ class JobApplicationWindow(DraggableWindow):
                 check_url="",
             )
         )
+        self.main_window = main_window
 
         self.focused_opacity = 0.9
         self.unfocused_opacity = 0.7
@@ -527,6 +529,7 @@ class JobApplicationWindow(DraggableWindow):
                 elif command["type"] == "save":
                     logger.info("Saving application")
                     self.save_application()
+                    self.main_window.refresh_applications()
                     self.hide()
                 elif command["type"] == "update_title":
                     logger.info("Updating application title: %s", command["title"])
