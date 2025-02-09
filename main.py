@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import QApplication
 from voice.listener import stream_record
 from voice.transcriber import run_transcriber
 from gui.job_window import JobApplicationWindow
+from gui.main_window import MainWindow
 from utils import setup_process_logging
 
 
@@ -58,7 +59,15 @@ def main():
     logger.info("Created communication queues")
 
     app = QApplication(sys.argv)
-    _window = JobApplicationWindow(window_queue)
+    # have to create the window before starting the processes, but not using it anywhere
+    _main_window = MainWindow()
+    # _main_window.show()
+    # app.exec()
+    # return
+
+    
+    # can directly pass in _main_window to the JobApplicationWindow constructor
+    _window = JobApplicationWindow(window_queue, _main_window)
     logger.info("Created Qt window")
 
     processes = [
