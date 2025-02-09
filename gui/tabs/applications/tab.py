@@ -6,7 +6,7 @@ import logging
 
 # pylint: disable=no-name-in-module
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit
-from gui.widgets import SearchBar
+from gui.widgets.inputs import SearchBar
 from .table import ApplicationTable
 
 logger = logging.getLogger(__name__)

@@ -2,7 +2,6 @@
 Main window for the application
 """
 
-import os
 import logging
 import threading
 from pynput import keyboard

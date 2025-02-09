@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import (
     QTextEdit,
 )
 from PyQt6.QtCore import Qt
-from gui.widgets import TabNavigationLineEdit, StatusDropdown
+from gui.widgets.inputs import TabNavigationLineEdit, StatusDropdown
 from gui.dataclasses import ApplicationStatus
 
 logger = logging.getLogger(__name__)
