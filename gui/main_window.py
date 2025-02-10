@@ -2,6 +2,7 @@
 Main window for the application
 """
 
+import os
 import logging
 import threading
 from pynput import keyboard
@@ -10,9 +11,11 @@ from pynput import keyboard
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QApplication, QDialog, QLineEdit, QTabWidget
 from PyQt6.QtCore import Qt, QPoint, pyqtSignal, QObject
 
-from gui.widgets import DraggableWindow, CustomFileExplorer
+from gui.widgets.base import DraggableWindow
+from gui.widgets.file_explorer import CustomFileExplorer
 from gui.tabs.applications.tab import ApplicationsTab
 from gui.tabs.qa.tab import QATab
+from gui.tabs.resume.tab import ResumeTab
 from gui.dataclasses import Application, ApplicationMetadata, ApplicationStatus
 from db.adapter import DatabaseAdapter
 
@@ -248,9 +251,11 @@ class MainWindow(DraggableWindow):
 
         self.applications_tab = ApplicationsTab()
         self.qa_tab = QATab()
+        self.resume_tab = ResumeTab()
 
         self.tab_widget.addTab(self.applications_tab, "Applications (1)")
         self.tab_widget.addTab(self.qa_tab, "Questions (2)")
+        self.tab_widget.addTab(self.resume_tab, "Resume (3)")
 
         layout.addWidget(self.tab_widget)
 
@@ -267,6 +272,7 @@ class MainWindow(DraggableWindow):
 
         self.applications_tab.installEventFilter(self)
         self.qa_tab.installEventFilter(self)
+        self.resume_tab.installEventFilter(self)
 
     def center_window(self):
         """Center the window on the screen"""
@@ -447,6 +453,24 @@ class MainWindow(DraggableWindow):
             if key == Qt.Key.Key_F:
                 self.qa_tab.search_bar.setFocus()
                 return
+
+        elif current_tab == 2:
+            if key == Qt.Key.Key_P:
+                self.resume_tab.pdf_input.setFocus()
+            elif key == Qt.Key.Key_I:
+                self.resume_tab.file1_input.setFocus()
+            elif key == Qt.Key.Key_O:
+                self.resume_tab.file2_input.setFocus()
+            elif key == Qt.Key.Key_B:
+                self.resume_tab.browse_pdf_btn.click()
+            elif key == Qt.Key.Key_L:
+                self.resume_tab.load_pdf_btn.click()
+            elif key == Qt.Key.Key_F:
+                self.resume_tab.browse1_btn.click()
+            elif key == Qt.Key.Key_G:
+                self.resume_tab.browse2_btn.click()
+            elif key == Qt.Key.Key_C:
+                self.resume_tab.compare_btn.click()
 
         super().keyPressEvent(event)
 
