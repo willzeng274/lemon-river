@@ -16,6 +16,7 @@ from gui.widgets.file_explorer import CustomFileExplorer
 from gui.tabs.applications.tab import ApplicationsTab
 from gui.tabs.qa.tab import QATab
 from gui.tabs.resume.tab import ResumeTab
+from gui.tabs.workspace.tab import WorkspaceTab
 from gui.dataclasses import Application, ApplicationMetadata, ApplicationStatus
 from db.adapter import DatabaseAdapter
 
@@ -252,10 +253,12 @@ class MainWindow(DraggableWindow):
         self.applications_tab = ApplicationsTab()
         self.qa_tab = QATab()
         self.resume_tab = ResumeTab()
+        self.workspace_tab = WorkspaceTab()
 
         self.tab_widget.addTab(self.applications_tab, "Applications (1)")
         self.tab_widget.addTab(self.qa_tab, "Questions (2)")
         self.tab_widget.addTab(self.resume_tab, "Resume (3)")
+        self.tab_widget.addTab(self.workspace_tab, "Workspace (4)")
 
         layout.addWidget(self.tab_widget)
 
@@ -273,6 +276,7 @@ class MainWindow(DraggableWindow):
         self.applications_tab.installEventFilter(self)
         self.qa_tab.installEventFilter(self)
         self.resume_tab.installEventFilter(self)
+        self.workspace_tab.installEventFilter(self)
 
     def center_window(self):
         """Center the window on the screen"""
@@ -472,6 +476,10 @@ class MainWindow(DraggableWindow):
             elif key == Qt.Key.Key_C:
                 self.resume_tab.compare_btn.click()
 
+        elif current_tab == 3:
+            if key == Qt.Key.Key_C:
+                self.workspace_tab.create_resume_btn.click()
+
         super().keyPressEvent(event)
 
     def eventFilter(self, obj, event):
@@ -483,21 +491,88 @@ class MainWindow(DraggableWindow):
             return True
         return super().eventFilter(obj, event)
 
+    def update_application_selector(self):
+        """Update the application selector with current applications"""
+        selector = self.workspace_tab.application_selector
+
+        current_id = selector.current_id
+
+        selector.blockSignals(True)
+        try:
+            selector.clear()
+            
+            logger.info("Updating application selector with %d applications", len(self.applications))
+            sorted_apps = sorted(self.applications, key=lambda x: x.metadata.created_at, reverse=True)
+            
+            for app in sorted_apps:
+                app_id = getattr(app, 'id', None)
+                if app_id is not None:
+                    selector.add_option(
+                        f"{app.metadata.company} - {app.metadata.role}",
+                        app_id
+                    )
+            
+            if current_id is not None:
+                selector.select_option_no_signal(current_id)
+                
+        finally:
+            selector.blockSignals(False)
+
+    def open_workspace_tab(self, row: int):
+        """Open the workspace tab for a specific application"""
+        app_id = self.applications_tab.table.application_ids.get(row)
+        if app_id is None:
+            return
+
+        application = self.db.get_application(app_id)
+        if not application:
+            return
+
+        self.tab_widget.setCurrentIndex(3)
+
+        selector = self.workspace_tab.application_selector
+        selector.select_option(app_id)
+
+        self.workspace_tab.current_application_id = app_id
+        self.workspace_tab.company_edit.setText(application.metadata.company)
+        self.workspace_tab.role_edit.setText(application.metadata.role)
+        self.workspace_tab.location_edit.setText(application.metadata.location)
+        self.workspace_tab.url_edit.setText(application.metadata.url)
+        self.workspace_tab.check_url_edit.setText(application.metadata.check_url)
+        self.workspace_tab.duration_edit.setText(application.metadata.duration)
+        self.workspace_tab.status_edit.setCurrentText(application.status.value)
+        self.workspace_tab.description_edit.setText(application.metadata.description)
+        self.workspace_tab.notes_edit.setText(application.metadata.notes)
+
+        resume_path = getattr(application.metadata, 'resume_path', None)
+        if resume_path and os.path.exists(resume_path):
+            self.workspace_tab.pdf_viewer.load_pdf(resume_path)
+        else:
+            self.workspace_tab.pdf_viewer.content.setText("No resume yet")
+
     def setup_update_handlers(self):
         """Setup handlers for update signals"""
         signals = self.update_signals
         
         signals.field_updated.connect(self.applications_tab.handle_field_update)
+        signals.field_updated.connect(self.workspace_tab.handle_field_update)
         signals.field_updated.connect(self.qa_tab.handle_field_update)
         
         signals.qa_updated.connect(self.qa_tab.handle_qa_update)
         signals.qa_added.connect(self.qa_tab.handle_qa_add)
         signals.qa_deleted.connect(self.qa_tab.handle_qa_delete)
         
+        signals.qa_table_update.connect(self.workspace_tab.handle_qa_table_update)
+        signals.qa_table_delete.connect(self.workspace_tab.handle_qa_table_delete)
+        
         signals.application_deleted.connect(self.applications_tab.handle_application_delete)
+        signals.application_deleted.connect(self.workspace_tab.handle_application_delete)
         signals.application_deleted.connect(self.qa_tab.handle_application_delete)
         
         signals.application_added.connect(self.applications_tab.handle_application_add)
+        # signals.application_added.connect(self.workspace_tab.handle_application_add)
+        
+        signals.resume_updated.connect(self.workspace_tab.handle_resume_update)
 
     def emit_field_update(self, app_id: int, field_name: str, new_value: object):
         """Emit a field update signal"""
