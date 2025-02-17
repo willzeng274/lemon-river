@@ -22,8 +22,8 @@ logger = logging.getLogger(__name__)
 class QAItem(QWidget):
     """Widget representing a question and answer pair"""
     
-    deleted = pyqtSignal(QWidget)
-    qa_changed = pyqtSignal(int, str, str)
+    deleted = pyqtSignal(QWidget) # signal sends parameter as itself
+    qa_changed = pyqtSignal(int, str, str) # question_id, question, answer
     
     def __init__(self, question_id: int, question: str, answer: str, parent=None):
         super().__init__(parent)
@@ -179,7 +179,7 @@ class QAListWidget(QWidget):
         logger.debug("QA item added at position %d", self.layout.count() - 1)
         return item
 
-    def handle_item_deleted(self, item):
+    def handle_item_deleted(self, item: QWidget):
         """Handle item deletion and adjust size"""
         logger.info("Handling item deletion")
         item.deleteLater()

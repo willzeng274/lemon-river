@@ -10,6 +10,7 @@ from .lockable import LockableField
 from .paste import PlainPasteLineEdit, PlainPasteTextEdit
 from .pdf_viewer import PDFViewer
 from .diff_viewer import DiffViewer, DiffHighlighter
+from .qa_widget import QAItem, QAListWidget
 from .inputs import ApplicationSelector
 from .job_qa import QAItem as JobQAItem, QAListWidget as JobQAListWidget
 
@@ -25,6 +26,8 @@ __all__ = [
     'PDFViewer',
     'DiffViewer',
     'DiffHighlighter',
+    'QAItem',
+    'QAListWidget',
     'ApplicationSelector',
     'JobQAItem',
     'JobQAListWidget',

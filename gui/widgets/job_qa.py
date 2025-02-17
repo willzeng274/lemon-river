@@ -16,8 +16,8 @@ from .paste import PlainPasteTextEdit
 class QAItem(QFrame):
     """Widget representing a question and answer pair"""
     
-    deleted = pyqtSignal(QWidget)
-    edited = pyqtSignal(str, str, QWidget)
+    deleted = pyqtSignal(QWidget) # sends itself to be deleted
+    edited = pyqtSignal(str, str, QWidget) # sends new question, answer, and itself
     
     def __init__(self, question: str, answer: str, parent=None):
         super().__init__(parent)

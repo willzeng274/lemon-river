@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 class GroupSelector(QFrame):
     """Custom group selector widget similar to ApplicationSelector"""
     
-    selectionChanged = pyqtSignal(str)
+    selectionChanged = pyqtSignal(str) # Emitted when a group is selected, with the group name
     
     def __init__(self, parent=None):
         super().__init__(parent)

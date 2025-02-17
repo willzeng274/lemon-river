@@ -26,7 +26,7 @@ logger.setLevel(logging.DEBUG)
 
 class GlobalHotkeyListener(QObject):
     """Global hotkey listener using pynput"""
-    toggle_signal = pyqtSignal()
+    toggle_signal = pyqtSignal() # toggles window visibility (show/hide)
 
     def __init__(self):
         super().__init__()
@@ -101,7 +101,7 @@ class GlobalHotkeyListener(QObject):
 
 class ApplicationUpdateSignals(QObject):
     """Centralized signals for application updates"""
-    field_updated = pyqtSignal(int, str, object)
+    field_updated = pyqtSignal(int, str, object) # app_id, field_name, new_value
     
     qa_updated = pyqtSignal(int, int, str, str)  # app_id, question_id, question, answer
     qa_added = pyqtSignal(int, int, str, str)  # app_id, question_id, question, answer
@@ -110,8 +110,8 @@ class ApplicationUpdateSignals(QObject):
     qa_table_update = pyqtSignal(int, int, str, str)  # app_id, question_id, question, answer
     qa_table_delete = pyqtSignal(int, int)  # app_id, question_id
     
-    application_deleted = pyqtSignal(int)
-    application_added = pyqtSignal(object)  # Application object
+    application_deleted = pyqtSignal(int) # app_id
+    application_added = pyqtSignal(object)  # Application object from dataclasses
     
     resume_updated = pyqtSignal(int, str) # app_id, resume_path
     

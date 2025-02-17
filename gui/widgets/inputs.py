@@ -43,7 +43,7 @@ class SearchBar(QLineEdit):
 class TabNavigationLineEdit(QLineEdit):
     """LineEdit that supports tab navigation between cells"""
     def __init__(self, row: int, col: int, table, text: str = ""):
-        super().__init__()  # Initialize without text
+        super().__init__() # without text
         self.row = row
         self.col = col
         self.table = table
@@ -51,8 +51,8 @@ class TabNavigationLineEdit(QLineEdit):
         # self.textChanged.connect(self._handle_text_changed)
         self.editingFinished.connect(self._handle_editing_finished)
         self._original_text = text
-        self.setText(text)  # Set text after initialization
-        self.setCursorPosition(0)  # Now set cursor position after text is set
+        self.setText(text)
+        self.setCursorPosition(0)
         self.is_editing = False
 
     def setText(self, text: str):
@@ -655,8 +655,8 @@ class ApplicationSelector(QFrame):
 class StatusDropdown(QWidget):
     """Custom dropdown for selecting application status with consistent styling"""
 
-    statusChanged = pyqtSignal(str)
-    currentTextChanged = pyqtSignal(str)
+    statusChanged = pyqtSignal(str) # new status as str
+    currentTextChanged = pyqtSignal(str) # directly connected to statusChanged, but used in the workspace tab
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -701,41 +701,33 @@ class StatusDropdown(QWidget):
             option.status_value = status.value
 
             option.mousePressEvent = lambda e, s=status.value: self.select_option(s)
-            
-            # Option layout
+
             option_layout = QHBoxLayout(option)
             option_layout.setContentsMargins(12, 8, 12, 8)
-            
-            # Check mark (visible when selected)
+
             check = QLabel("✓")
             check.setFixedWidth(16)
             check.setVisible(status.value == self.current_status)
-            
-            # Option text
+
             text = QLabel(status.value)
             
             option_layout.addWidget(check)
             option_layout.addWidget(text)
-            
-            # Store references
+
             option.check = check
             option.text = text
             
             popup_layout.addWidget(option)
             self.option_items.append(option)
-        
-        # Apply styles
+
         self.apply_styles()
-        
-        # Install event filter for detecting clicks outside
+
         QApplication.instance().installEventFilter(self)
-        
-        # Connect signals
+
         self.statusChanged.connect(self.currentTextChanged)
     
     def apply_styles(self):
         """Apply consistent styling"""
-        # Button styling
         self.button.setStyleSheet("""
             QFrame {
                 background-color: #2d2d2d;
