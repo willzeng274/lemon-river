@@ -3,11 +3,11 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3.13%2B-blue)](https://www.python.org/downloads/)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-<img src="docs/assets/logo.png" alt="Lemon River Logo" width="200"/>
+<img src="logo.png" alt="Lemon River Logo" width="200"/>
 
 *Your AI-powered companion for mindful job applications*
 
@@ -21,9 +21,7 @@ Lemon River is a job application assistant that helps you manage and tailor your
 
 The reason why I built this app is because I couldn't find a job application assistant that was both easy to use and customizable. I also wanted to learn how to build a desktop application in Python. Online solutions like Simplify are great, but it isn't customizable and I wanted to build my own. I used to keep track of my applications in a Notion page, but the app was very inefficient and I always had to switch between tabs to copy and paste information from the postings into my job application tracking table. Lemon River solves this by allowing you to capture information as you browse through job postings, and then organize it based on your voice commands while having access to your clipboard.
 
-<div align="center">
-<img src="docs/assets/demo.gif" alt="Lemon River Demo" width="600"/>
-</div>
+TODO: video here
 
 ## 🔧 Technologies
 
@@ -104,7 +102,7 @@ pkill -f main.py
 ## 🎯 Usage
 
 <div align="center">
-<img src="docs/assets/workflow.png" alt="Workflow Diagram" width="800"/>
+<img src="workflow.png" alt="Workflow Diagram" width="800"/>
 </div>
 
 1. **Start Browsing**: Open job postings as you normally would
@@ -126,7 +124,7 @@ pkill -f main.py
 ## 🏗️ Architecture
 
 <div align="center">
-<img src="docs/assets/architecture.png" alt="Architecture Diagram" width="800"/>
+<img src="architecture.png" alt="Architecture Diagram" width="800"/>
 </div>
 
 ### How it works under the hood
