@@ -7,7 +7,7 @@
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-<img src="logo.png" alt="Lemon River Logo" width="200"/>
+<img src="docs/logo.png" alt="Lemon River Logo" width="200"/>
 
 *Your AI-powered companion for mindful job applications*
 
@@ -102,7 +102,7 @@ pkill -f main.py
 ## 🎯 Usage
 
 <div align="center">
-<img src="workflow.png" alt="Workflow Diagram" width="800"/>
+<img src="docs/workflow.png" alt="Workflow Diagram" width="800"/>
 </div>
 
 1. **Start Browsing**: Open job postings as you normally would
@@ -124,7 +124,7 @@ pkill -f main.py
 ## 🏗️ Architecture
 
 <div align="center">
-<img src="architecture.png" alt="Architecture Diagram" width="800"/>
+<img src="docs/architecture.png" alt="Architecture Diagram" width="800"/>
 </div>
 
 ### How it works under the hood
@@ -159,6 +159,7 @@ pkill -f main.py
 - [ ] Potential optimizations with application syncing
 - [ ] Better documentation
 - [ ] Build pipeline with pyinstaller (it did not work well on macOS with pyinstaller)
+- [ ] Vim mode
 
 ## 🤝 Contributing
 
