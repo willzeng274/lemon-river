@@ -4,7 +4,14 @@ First off, thank you for considering contributing to Lemon River! It's people li
 
 ## Code of Conduct
 
-There is no code of conduct for this project.
+This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code. Please read the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before contributing.
+
+We foster an open and welcoming environment, and expect all participants to:
+* Show respect and courtesy to others
+* Use inclusive language
+* Be supportive of different viewpoints
+* Accept constructive criticism gracefully
+* Focus on what's best for the community
 
 ## How Can I Contribute?
 
