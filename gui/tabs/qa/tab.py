@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 class QATab(QWidget):
     """Tab for displaying and managing Q&A entries"""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
@@ -63,7 +64,7 @@ class QATab(QWidget):
     def delete_qa(self, row: int):
         """Delete a Q&A entry"""
         parent = self
-        while parent and not hasattr(parent, 'delete_qa'):
+        while parent and not hasattr(parent, "delete_qa"):
             parent = parent.parent()
 
         if parent:
@@ -73,21 +74,25 @@ class QATab(QWidget):
 
     def handle_field_update(self, app_id: int, field_name: str, new_value: object):
         """Handle field updates from other tabs"""
-        if field_name not in ['company', 'role']:
+        if field_name not in ["company", "role"]:
             return
 
         for row in range(self.qa_table.rowCount()):
             if self.qa_table.qa_ids.get(row) == app_id:
-                col = 1 if field_name == 'company' else 2
+                col = 1 if field_name == "company" else 2
                 cell_widget = self.qa_table.cellWidget(row, col)
                 if cell_widget:
                     line_edit = cell_widget.findChild(QLineEdit)
                     if line_edit and line_edit.text() != str(new_value):
                         line_edit.setText(str(new_value))
 
-    def handle_qa_update(self, app_id: int, question_id: int, question: str, answer: str):
+    def handle_qa_update(
+        self, app_id: int, question_id: int, question: str, answer: str
+    ):
         """Handle question update from workspace"""
-        logger.info("Handling QA update for app %d, question ID %d", app_id, question_id)
+        logger.info(
+            "Handling QA update for app %d, question ID %d", app_id, question_id
+        )
 
         row = -1
         for r, q_id in self.qa_table.question_id_map.items():
@@ -96,12 +101,16 @@ class QATab(QWidget):
                 break
 
         if row < 0:
-            logger.warning("Question ID %d not found in QA table, may need to add it", question_id)
+            logger.warning(
+                "Question ID %d not found in QA table, may need to add it", question_id
+            )
             application = self.get_application(app_id)
             if application:
                 company = application.metadata.company
                 role = application.metadata.role
-                self.qa_table.add_qa_row(app_id, company, role, question, answer, question_id)
+                self.qa_table.add_qa_row(
+                    app_id, company, role, question, answer, question_id
+                )
             return
 
         logger.debug("Updating row %d with question ID %d", row, question_id)
@@ -128,7 +137,9 @@ class QATab(QWidget):
 
         for q_id in self.qa_table.question_id_map.values():
             if q_id == question_id:
-                logger.warning("Question ID %d already exists, updating instead", question_id)
+                logger.warning(
+                    "Question ID %d already exists, updating instead", question_id
+                )
                 self.handle_qa_update(app_id, question_id, question, answer)
                 return
 
@@ -136,13 +147,17 @@ class QATab(QWidget):
         if application:
             company = application.metadata.company
             role = application.metadata.role
-            self.qa_table.add_qa_row(app_id, company, role, question, answer, question_id)
+            self.qa_table.add_qa_row(
+                app_id, company, role, question, answer, question_id
+            )
         else:
             logger.error("Could not find application %d to add question", app_id)
 
     def handle_qa_delete(self, app_id: int, question_id: int):
         """Handle question deletion from workspace"""
-        logger.info("Handling QA delete for app %d, question ID %d", app_id, question_id)
+        logger.info(
+            "Handling QA delete for app %d, question ID %d", app_id, question_id
+        )
 
         row = -1
         for r, q_id in self.qa_table.question_id_map.items():
@@ -154,7 +169,9 @@ class QATab(QWidget):
             logger.debug("Deleting row %d with question ID %d", row, question_id)
             self.qa_table.delete_row(row)
         else:
-            logger.warning("Question ID %d not found in QA table, nothing to delete", question_id)
+            logger.warning(
+                "Question ID %d not found in QA table, nothing to delete", question_id
+            )
 
     def handle_application_delete(self, app_id: int):
         """Handle application deletion"""
@@ -170,11 +187,11 @@ class QATab(QWidget):
         """Get application from parent's database"""
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
-        if parent and hasattr(parent, 'db'):
+        if parent and hasattr(parent, "db"):
             return parent.db.get_application(app_id)
         return None
 
@@ -215,15 +232,21 @@ class QATab(QWidget):
 
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
-        if parent and hasattr(parent, 'db'):
+        if parent and hasattr(parent, "db"):
             if parent.db.update_question(question_id, current_q, current_a):
-                logger.info("Updated question ID %d for application %d", question_id, app_id)
+                logger.info(
+                    "Updated question ID %d for application %d", question_id, app_id
+                )
                 parent.emit_qa_table_update(app_id, question_id, current_q, current_a)
             else:
-                logger.error("Failed to update question ID %d for application %d", question_id, app_id)
+                logger.error(
+                    "Failed to update question ID %d for application %d",
+                    question_id,
+                    app_id,
+                )
         else:
             logger.error("Could not find MainWindow parent with database connection")

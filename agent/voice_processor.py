@@ -55,7 +55,7 @@ def process_transcriptions(queue: Queue, window_queue: Queue, logger: logging.Lo
     """
     logger.info("Starting LLM processor")
     processor = VoiceProcessor(window_queue=window_queue)
-    
+
     timeout = Config.get_float("PROCESS_TIMEOUT", 5.0)
 
     while True:

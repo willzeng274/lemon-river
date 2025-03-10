@@ -39,7 +39,9 @@ def stream_record(logger):
 
     logger.info("Recording... Speak into the microphone.")
     logger.info(f"Using sample rate: {SAMPLE_RATE}, chunk size: {CHUNK_SIZE}")
-    logger.info(f"Silence threshold: {SILENCE_THRESHOLD}, silence duration: {SILENCE_DURATION}s")
+    logger.info(
+        f"Silence threshold: {SILENCE_THRESHOLD}, silence duration: {SILENCE_DURATION}s"
+    )
 
     def callback(indata, _frames, _time, status):
         nonlocal is_recording, speech_start_index, full_buffer
@@ -72,11 +74,11 @@ def stream_record(logger):
                 is_recording = False
 
     with sd.InputStream(
-        callback=callback, 
-        channels=1, 
-        samplerate=SAMPLE_RATE, 
+        callback=callback,
+        channels=1,
+        samplerate=SAMPLE_RATE,
         blocksize=CHUNK_SIZE,
-        device=Config.microphone_index()
+        device=Config.microphone_index(),
     ):
         try:
             sd.sleep(sys.maxsize)

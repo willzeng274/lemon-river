@@ -10,6 +10,7 @@ from PyQt6.QtCore import Qt
 
 logger = logging.getLogger(__name__)
 
+
 # pylint: disable=invalid-name
 class PlainPasteLineEdit(QLineEdit):
     """QLineEdit with plain text paste behavior"""
@@ -31,7 +32,10 @@ class PlainPasteTextEdit(QTextEdit):
 
     def keyPressEvent(self, event):
         """Handle key press events"""
-        if event.key() == Qt.Key.Key_V and event.modifiers() & Qt.KeyboardModifier.ControlModifier:
+        if (
+            event.key() == Qt.Key.Key_V
+            and event.modifiers() & Qt.KeyboardModifier.ControlModifier
+        ):
             self.insertPlainText(QApplication.clipboard().text())
         else:
-            super().keyPressEvent(event) 
+            super().keyPressEvent(event)

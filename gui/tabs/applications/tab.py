@@ -11,8 +11,10 @@ from .table import ApplicationTable
 
 logger = logging.getLogger(__name__)
 
+
 class ApplicationsTab(QWidget):
     """Tab for displaying and managing job applications"""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
@@ -31,7 +33,8 @@ class ApplicationsTab(QWidget):
         top_bar.addWidget(self.search_bar, stretch=1)
 
         add_button = QPushButton("+ Add Application (a)")
-        add_button.setStyleSheet("""
+        add_button.setStyleSheet(
+            """
             QPushButton {
                 background-color: #2c2c2c;
                 color: #ffffff;
@@ -46,7 +49,8 @@ class ApplicationsTab(QWidget):
             QPushButton:pressed {
                 background-color: #4a4a4a;
             }
-        """)
+        """
+        )
         add_button.clicked.connect(self.add_application)
         top_bar.addWidget(add_button)
 
@@ -77,10 +81,10 @@ class ApplicationsTab(QWidget):
     def add_application(self):
         """Add a new application"""
         parent = self
-        while parent and type(parent).__name__ != 'MainWindow':
+        while parent and type(parent).__name__ != "MainWindow":
             parent = parent.parent()
 
-        if parent and hasattr(parent, 'add_application'):
+        if parent and hasattr(parent, "add_application"):
             parent.add_application()
         else:
             logger.error("Could not find MainWindow parent with add_application method")
@@ -97,16 +101,16 @@ class ApplicationsTab(QWidget):
             return
 
         field_map = {
-            'company': 1,
-            'url': 2,
-            'check_url': 3,
-            'role': 4,
-            'location': 5,
-            'status': 6,
-            'duration': 7,
-            'description': 8,
-            'notes': 9,
-            'created_at': 10
+            "company": 1,
+            "url": 2,
+            "check_url": 3,
+            "role": 4,
+            "location": 5,
+            "status": 6,
+            "duration": 7,
+            "description": 8,
+            "notes": 9,
+            "created_at": 10,
         }
 
         if field_name in field_map:

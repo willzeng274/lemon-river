@@ -3,6 +3,7 @@ from enum import Enum
 from datetime import datetime
 from typing import List, Tuple
 
+
 class ApplicationStatus(Enum):
     """Status of a job application"""
 
@@ -31,7 +32,9 @@ class ApplicationMetadata:
     questions: List[Tuple[str, str]] = field(default_factory=list)  # question, answer
     question_ids: dict = field(default_factory=dict)  # map of index to question ID
     resume_path: str = None
-    created_at: str = field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    created_at: str = field(
+        default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    )
 
 
 @dataclass

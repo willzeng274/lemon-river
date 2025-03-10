@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 class ResumeTab(QWidget):
     """Tab for viewing and comparing resumes"""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
@@ -44,7 +45,8 @@ class ResumeTab(QWidget):
 
         self.pdf_input = QLineEdit()
         self.pdf_input.setPlaceholderText("Enter PDF path... (P)")
-        self.pdf_input.setStyleSheet("""
+        self.pdf_input.setStyleSheet(
+            """
             QLineEdit {
                 background-color: #2c2c2c;
                 color: #ffffff;
@@ -56,11 +58,13 @@ class ResumeTab(QWidget):
             QLineEdit:focus {
                 background-color: #3c3c3c;
             }
-        """)
+        """
+        )
         pdf_header.addWidget(self.pdf_input)
 
         self.browse_pdf_btn = QPushButton("Browse (B)")
-        self.browse_pdf_btn.setStyleSheet("""
+        self.browse_pdf_btn.setStyleSheet(
+            """
             QPushButton {
                 background-color: #2c2c2c;
                 color: #ffffff;
@@ -72,7 +76,8 @@ class ResumeTab(QWidget):
             QPushButton:hover {
                 background-color: #3c3c3c;
             }
-        """)
+        """
+        )
         pdf_header.addWidget(self.browse_pdf_btn)
 
         pdf_layout.addLayout(pdf_header)
@@ -129,7 +134,7 @@ class ResumeTab(QWidget):
         """Open file browser dialog and set the selected path"""
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
@@ -140,14 +145,15 @@ class ResumeTab(QWidget):
 
     def on_pdf_path_changed(self, path: str):
         """Handle PDF path changes and load the PDF"""
-        if path and path.lower().endswith('.pdf'):
+        if path and path.lower().endswith(".pdf"):
             self.pdf_viewer.load_pdf(path)
 
     def compare_files(self):
         """Compare two text files"""
         try:
-            with open(self.file1_input.text(), 'r', encoding='utf-8') as f1, \
-                 open(self.file2_input.text(), 'r', encoding='utf-8') as f2:
+            with open(self.file1_input.text(), "r", encoding="utf-8") as f1, open(
+                self.file2_input.text(), "r", encoding="utf-8"
+            ) as f2:
                 content1 = f1.read()
                 content2 = f2.read()
                 self.diff_viewer.show_diff(content1, content2)

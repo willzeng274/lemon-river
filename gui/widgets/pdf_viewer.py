@@ -6,8 +6,14 @@ import logging
 
 # pylint: disable=no-name-in-module
 from PyQt6.QtWidgets import (
-    QScrollArea, QWidget, QVBoxLayout, QHBoxLayout,
-    QPushButton, QLabel, QSizePolicy, QStackedWidget
+    QScrollArea,
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QPushButton,
+    QLabel,
+    QSizePolicy,
+    QStackedWidget,
 )
 from PyQt6.QtCore import Qt, QPointF
 from PyQt6.QtPdfWidgets import QPdfView
@@ -18,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 class PDFViewer(QScrollArea):
     """Widget for displaying PDF files"""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
@@ -29,7 +36,8 @@ class PDFViewer(QScrollArea):
     def setup_ui(self):
         """Setup the PDF viewer UI"""
         self.setWidgetResizable(True)
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QScrollArea {
                 border: none;
                 background-color: #262626;
@@ -78,7 +86,8 @@ class PDFViewer(QScrollArea):
             QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
                 background: none;
             }
-        """)
+        """
+        )
 
         container = QWidget()
         self.layout = QVBoxLayout(container)
@@ -86,46 +95,62 @@ class PDFViewer(QScrollArea):
         self.layout.setSpacing(0)
 
         self.stack = QStackedWidget()
-        self.stack.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.stack.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
 
         content_container = QWidget()
-        content_container.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        content_container.setStyleSheet("""
+        content_container.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
+        content_container.setStyleSheet(
+            """
             QWidget {
                 background-color: #262626;
             }
-        """)
-        
+        """
+        )
+
         content_layout = QVBoxLayout(content_container)
         content_layout.setContentsMargins(0, 0, 0, 0)
         content_layout.setSpacing(0)
-        
+
         self.content = QLabel("No PDF loaded")
         self.content.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.content.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.content.setStyleSheet("""
+        self.content.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
+        self.content.setStyleSheet(
+            """
             QLabel {
                 color: #8e8e8e;
                 font-size: 14px;
                 background-color: #262626;
             }
-        """)
+        """
+        )
         content_layout.addWidget(self.content)
 
         pdf_container = QWidget()
-        pdf_container.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        pdf_container.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
         pdf_layout = QVBoxLayout(pdf_container)
         pdf_layout.setContentsMargins(0, 0, 0, 0)
         pdf_layout.setSpacing(0)
-        
+
         self.pdf_view = QPdfView(pdf_container)
-        self.pdf_view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.pdf_view.setStyleSheet("""
+        self.pdf_view.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
+        self.pdf_view.setStyleSheet(
+            """
             QPdfView {
                 background-color: #262626;
                 border: none;
             }
-        """)
+        """
+        )
         self.pdf_document = QPdfDocument(self)
         self.pdf_view.setDocument(self.pdf_document)
 
@@ -176,13 +201,15 @@ class PDFViewer(QScrollArea):
         self.prev_btn.setFixedWidth(40)
 
         self.page_label = QLabel("Page 0 of 0")
-        self.page_label.setStyleSheet("""
+        self.page_label.setStyleSheet(
+            """
             QLabel {
                 color: #ffffff;
                 padding: 0 12px;
                 min-width: 80px;
             }
-        """)
+        """
+        )
         self.page_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.next_btn = QPushButton("→")
@@ -222,12 +249,14 @@ class PDFViewer(QScrollArea):
         controls_layout.addLayout(zoom_layout)
 
         controls_container = QWidget()
-        controls_container.setStyleSheet("""
+        controls_container.setStyleSheet(
+            """
             QWidget {
                 background-color: #262626;
                 border-top: 1px solid #333333;
             }
-        """)
+        """
+        )
         controls_container.setLayout(controls_layout)
 
         self.layout.addWidget(controls_container)
@@ -243,7 +272,7 @@ class PDFViewer(QScrollArea):
             self.pdf_document.load(path)
             self.current_page = 0
             self.update_navigation()
-            
+
             if self.pdf_document.pageCount() > 0:
                 self.show_pdf()
                 logger.info("Automatically fitting to height")
@@ -279,10 +308,10 @@ class PDFViewer(QScrollArea):
         """Update navigation buttons and page label"""
         page_count = self.pdf_document.pageCount()
         current_page = self.pdf_view.pageNavigator().currentPage()
-        
+
         self.prev_btn.setEnabled(current_page > 0)
         self.next_btn.setEnabled(current_page < page_count - 1)
-        
+
         if page_count > 0:
             self.page_label.setText(f"Page {current_page + 1} of {page_count}")
         else:
@@ -317,7 +346,9 @@ class PDFViewer(QScrollArea):
         if not self.pdf_document.pageCount():
             return
 
-        page_size = self.pdf_document.pagePointSize(self.pdf_view.pageNavigator().currentPage())
+        page_size = self.pdf_document.pagePointSize(
+            self.pdf_view.pageNavigator().currentPage()
+        )
         if not page_size.isValid():
             return
 

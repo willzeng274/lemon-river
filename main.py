@@ -21,12 +21,12 @@ def setup_logging(name):
     """
     Setup logging for the given name.
     """
-    log_level = os.getenv('LOG_LEVEL', 'INFO')
-    log_dir = os.getenv('LOG_DIR', 'logs')
-    
+    log_level = os.getenv("LOG_LEVEL", "INFO")
+    log_dir = os.getenv("LOG_DIR", "logs")
+
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
-        
+
     setup_process_logging(level=log_level)
     return logging.getLogger(name)
 
@@ -65,7 +65,6 @@ def main():
     # app.exec()
     # return
 
-    
     # can directly pass in _main_window to the JobApplicationWindow constructor
     _window = JobApplicationWindow(window_queue, _main_window)
     logger.info("Created Qt window")

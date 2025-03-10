@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 # pylint: disable=invalid-name
 class CustomFileExplorer(QDialog):
     """Custom file explorer dialog with VSCode-like tree view"""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.root_path = os.path.expanduser("~/Desktop/resumes")
@@ -44,7 +45,8 @@ class CustomFileExplorer(QDialog):
         self.search_bar = QLineEdit()
         self.search_bar.setPlaceholderText("Search files...")
         self.search_bar.textChanged.connect(self.filter_items)
-        self.search_bar.setStyleSheet("""
+        self.search_bar.setStyleSheet(
+            """
             QLineEdit {
                 background-color: #2c2c2c;
                 color: #ffffff;
@@ -56,7 +58,8 @@ class CustomFileExplorer(QDialog):
                 background-color: #3c3c3c;
                 outline: none;
             }
-        """)
+        """
+        )
         layout.addWidget(self.search_bar)
 
         self.file_tree = QTreeWidget()
@@ -66,7 +69,8 @@ class CustomFileExplorer(QDialog):
         self.file_tree.itemExpanded.connect(self.handle_item_expanded)
         self.file_tree.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.file_tree.itemClicked.connect(self.handle_item_clicked)
-        self.file_tree.setStyleSheet("""
+        self.file_tree.setStyleSheet(
+            """
             QTreeWidget {
                 background-color: #1c1c1c;
                 border: none;
@@ -95,16 +99,19 @@ class CustomFileExplorer(QDialog):
             QTreeWidget::branch {
                 background: transparent;
             }
-        """)
+        """
+        )
         layout.addWidget(self.file_tree)
 
         button_bar = QWidget()
-        button_bar.setStyleSheet("""
+        button_bar.setStyleSheet(
+            """
             QWidget {
                 background-color: #2c2c2c;
                 border-top: 1px solid #3c3c3c;
             }
-        """)
+        """
+        )
         button_layout = QHBoxLayout(button_bar)
         button_layout.setContentsMargins(8, 8, 8, 8)
         button_layout.setSpacing(8)
@@ -112,7 +119,8 @@ class CustomFileExplorer(QDialog):
         cancel_button = QPushButton("Cancel")
         cancel_button.clicked.connect(self.reject)
         cancel_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        cancel_button.setStyleSheet("""
+        cancel_button.setStyleSheet(
+            """
             QPushButton {
                 background-color: #2c2c2c;
                 color: #ffffff;
@@ -124,7 +132,8 @@ class CustomFileExplorer(QDialog):
             QPushButton:hover {
                 background-color: #3c3c3c;
             }
-        """)
+        """
+        )
 
         select_button = QPushButton("Select")
         select_button.clicked.connect(self.handle_select)
@@ -168,11 +177,11 @@ class CustomFileExplorer(QDialog):
                 self.load_children(item)
         else:
             ext = os.path.splitext(name)[1].lower()
-            if ext == '.pdf':
+            if ext == ".pdf":
                 item.setText(0, f"  📕 {name}")
-            elif ext == '.tex':
+            elif ext == ".tex":
                 item.setText(0, f"  📝 {name}")
-            elif ext == '.txt':
+            elif ext == ".txt":
                 item.setText(0, f"  📄 {name}")
 
         return item
@@ -185,7 +194,7 @@ class CustomFileExplorer(QDialog):
                 if os.path.isdir(full_path):
                     return True
                 ext = os.path.splitext(item)[1].lower()
-                if ext in ['.pdf', '.tex', '.txt']:
+                if ext in [".pdf", ".tex", ".txt"]:
                     return True
         # pylint: disable=broad-exception-caught
         except Exception:
@@ -212,7 +221,7 @@ class CustomFileExplorer(QDialog):
                     dirs.append((mod_time, full_path))
                 else:
                     ext = os.path.splitext(name)[1].lower()
-                    if ext in ['.pdf', '.tex', '.txt']:
+                    if ext in [".pdf", ".tex", ".txt"]:
                         files.append((mod_time, full_path))
 
             dirs.sort(key=lambda x: x[0], reverse=True)
@@ -261,7 +270,9 @@ class CustomFileExplorer(QDialog):
                 item_text = item.text(0).lower()
                 # item_path = item.data(0, Qt.ItemDataRole.UserRole)
 
-                should_show = bool(search_text == "" or self.fuzzy_match(search_text, item_text))
+                should_show = bool(
+                    search_text == "" or self.fuzzy_match(search_text, item_text)
+                )
 
                 child_visible = False
                 for child_idx in range(item.childCount()):
@@ -302,11 +313,16 @@ class CustomFileExplorer(QDialog):
                 if obj == self.search_bar:
                     self.file_tree.setFocus()
                     if self.file_tree.topLevelItemCount() > 0:
-                        first_visible_item = self.find_first_visible_item(self.file_tree.topLevelItem(0))
+                        first_visible_item = self.find_first_visible_item(
+                            self.file_tree.topLevelItem(0)
+                        )
                         if first_visible_item:
                             self.file_tree.setCurrentItem(first_visible_item)
                     return True
-                elif obj == self.file_tree and event.modifiers() & Qt.KeyboardModifier.ShiftModifier:
+                elif (
+                    obj == self.file_tree
+                    and event.modifiers() & Qt.KeyboardModifier.ShiftModifier
+                ):
                     self.search_bar.setFocus()
                     return True
             elif event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
@@ -354,7 +370,9 @@ class CustomFileExplorer(QDialog):
                 if not sibling.isHidden():
                     return sibling
 
-            current_item = parent if parent != self.file_tree.invisibleRootItem() else None
+            current_item = (
+                parent if parent != self.file_tree.invisibleRootItem() else None
+            )
 
         return None
 
@@ -386,7 +404,11 @@ class CustomFileExplorer(QDialog):
                 return sibling
 
         if parent != self.file_tree.invisibleRootItem():
-            return parent if not parent.isHidden() else self.get_previous_visible_item(parent)
+            return (
+                parent
+                if not parent.isHidden()
+                else self.get_previous_visible_item(parent)
+            )
 
         return None
 

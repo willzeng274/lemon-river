@@ -18,7 +18,7 @@ class CommandType(Enum):
     """Types of commands that can be processed"""
 
     ADD_URL = "ADD_URL"
-    ADD_TITLE = "ADD_TITLE" 
+    ADD_TITLE = "ADD_TITLE"
     ADD_COMPANY = "ADD_COMPANY"
     ADD_LOCATION = "ADD_LOCATION"
     ADD_DURATION = "ADD_DURATION"
@@ -48,7 +48,9 @@ def process_command(command_type: CommandType, reasoning: str) -> Dict[str, Any]
         Dict[str, Any]: Dictionary containing command type, and completion status
     """
     logger.info(
-        "Tool called: process_command with type=%s, reasoning=%s", command_type, reasoning
+        "Tool called: process_command with type=%s, reasoning=%s",
+        command_type,
+        reasoning,
     )
     result = {"command_type": command_type, "complete": True}
     logger.debug("process_command returning: %s", result)
@@ -67,7 +69,9 @@ def wait_for_completion(command_type: CommandType, reasoning: str) -> Dict[str, 
         Dict[str, Any]: Dictionary containing command type, and incomplete status
     """
     logger.info(
-        "Tool called: wait_for_completion with type=%s, reasoning=%s", command_type, reasoning
+        "Tool called: wait_for_completion with type=%s, reasoning=%s",
+        command_type,
+        reasoning,
     )
     result = {"command_type": command_type, "complete": False}
     logger.debug("wait_for_completion returning: %s", result)
@@ -115,33 +119,35 @@ ADD_LINK, ADD_NOTES, ADD_ROLE, ADD_NODES, ADD_JOB_TITLE, UNKNOWN
 
 <END SYSTEM PROMPT>
 """,
-# Examples were detrimental to the model's performance for some reason
-
-# Examples:
-# "add url from clipboard please" -> process_command(ADD_URL)
-# "add the" -> wait_for_completion(UNKNOWN)
-# "add the link wait" -> wait_for_completion(ADD_URL)
-# "I think I have to do something" -> no tools
-# "I need to add a job" -> no tools
-# "add title from clipboard thanks" -> process_command(ADD_TITLE)
+            # Examples were detrimental to the model's performance for some reason
+            # Examples:
+            # "add url from clipboard please" -> process_command(ADD_URL)
+            # "add the" -> wait_for_completion(UNKNOWN)
+            # "add the link wait" -> wait_for_completion(ADD_URL)
+            # "I think I have to do something" -> no tools
+            # "I need to add a job" -> no tools
+            # "add title from clipboard thanks" -> process_command(ADD_TITLE)
         )
 
     def determine_command(self, text: str) -> Tuple[Optional[CommandType], bool]:
         """Determine the command from the user's input"""
         try:
             logger.debug("Sending prompt to Ollama: %s", text)
-            
+
             system_prompt = self.config.system_prompt
-            
+
             response = ollama.chat(
                 model=self.config.model,
                 messages=[
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": f"""
+                    {
+                        "role": "user",
+                        "content": f"""
                      <BEGIN USER PROMPT>
                      {text}
                      <END USER PROMPT>
-                     """},
+                     """,
+                    },
                 ],
                 tools=[process_command, wait_for_completion],
                 options={

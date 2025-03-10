@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 class QATable(QTableWidget):
     """Table widget for displaying questions and answers"""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
@@ -35,7 +36,8 @@ class QATable(QTableWidget):
         self.setHorizontalScrollMode(QTableWidget.ScrollMode.ScrollPerPixel)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QTableWidget {
                 border: none;
                 background-color: #2c2c2c;
@@ -101,11 +103,12 @@ class QATable(QTableWidget):
             QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
                 height: 0px;
             }
-        """)
+        """
+        )
 
         header = self.horizontalHeader()
         column_widths = {
-            0: 25,   # Delete button
+            0: 25,  # Delete button
             1: 120,  # Company
             2: 120,  # Role
             3: 400,  # Question
@@ -138,7 +141,7 @@ class QATable(QTableWidget):
 
         parent = self
         while parent:
-            if type(parent).__name__ == 'QATab':
+            if type(parent).__name__ == "QATab":
                 break
             parent = parent.parent()
 
@@ -148,9 +151,22 @@ class QATable(QTableWidget):
 
         parent.save_cell_edit(row, col, text)
 
-    def add_qa_row(self, app_id: int, company: str, role: str, question: str, answer: str, question_id: int = -1):
+    def add_qa_row(
+        self,
+        app_id: int,
+        company: str,
+        role: str,
+        question: str,
+        answer: str,
+        question_id: int = -1,
+    ):
         """Add a new Q&A row to the table"""
-        logger.info("Adding QA row for app %d, question ID %d: %s", app_id, question_id, question[:50])
+        logger.info(
+            "Adding QA row for app %d, question ID %d: %s",
+            app_id,
+            question_id,
+            question[:50],
+        )
 
         row = self.rowCount()
         self.insertRow(row)
@@ -177,7 +193,8 @@ class QATable(QTableWidget):
         company_layout.setSpacing(0)
         company_edit = TabNavigationLineEdit(row, 1, self, company)
         company_edit.setReadOnly(True)
-        company_edit.setStyleSheet("""
+        company_edit.setStyleSheet(
+            """
             QLineEdit {
                 background-color: transparent;
                 color: #8e8e8e;
@@ -186,7 +203,8 @@ class QATable(QTableWidget):
                 margin: 0;
                 font-size: 13px;
             }
-        """)
+        """
+        )
         company_layout.addWidget(company_edit)
         self.setCellWidget(row, 1, company_widget)
 
@@ -205,7 +223,8 @@ class QATable(QTableWidget):
         question_layout.setContentsMargins(0, 0, 0, 0)
         question_layout.setSpacing(0)
         question_edit = TabNavigationLineEdit(row, 3, self, question)
-        question_edit.setStyleSheet("""
+        question_edit.setStyleSheet(
+            """
             QLineEdit {
                 background-color: transparent;
                 color: #ffffff;
@@ -214,7 +233,8 @@ class QATable(QTableWidget):
                 margin: 0;
                 font-size: 13px;
             }
-        """)
+        """
+        )
         question_edit.textChanged.connect(lambda text: self.cell_edited(row, 3, text))
         question_layout.addWidget(question_edit)
         self.setCellWidget(row, 3, question_widget)
@@ -241,33 +261,28 @@ class QATable(QTableWidget):
 
         all_questions = []
         for app in applications:
-            if not hasattr(app.metadata, 'questions') or not app.metadata.questions:
+            if not hasattr(app.metadata, "questions") or not app.metadata.questions:
                 continue
 
-            question_ids = getattr(app.metadata, 'question_ids', {})
+            question_ids = getattr(app.metadata, "question_ids", {})
 
             for i, (question, answer) in enumerate(app.metadata.questions):
                 question_id = question_ids.get(i, -1)
-                all_questions.append((
-                    question_id,
-                    app.id,
-                    app.metadata.company,
-                    app.metadata.role,
-                    question,
-                    answer
-                ))
+                all_questions.append(
+                    (
+                        question_id,
+                        app.id,
+                        app.metadata.company,
+                        app.metadata.role,
+                        question,
+                        answer,
+                    )
+                )
 
         all_questions.sort(key=lambda x: x[0], reverse=True)
 
         for question_id, app_id, company, role, question, answer in all_questions:
-            self.add_qa_row(
-                app_id,
-                company,
-                role,
-                question,
-                answer,
-                question_id
-            )
+            self.add_qa_row(app_id, company, role, question, answer, question_id)
 
         logger.info("QA table updated with %d rows", self.rowCount())
 
@@ -286,16 +301,22 @@ class QATable(QTableWidget):
 
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
-        if parent and hasattr(parent, 'db'):
+        if parent and hasattr(parent, "db"):
             if parent.db.delete_question(question_id):
-                logger.info("Deleted question ID %d for application %d", question_id, app_id)
+                logger.info(
+                    "Deleted question ID %d for application %d", question_id, app_id
+                )
                 parent.emit_qa_table_delete(app_id, question_id)
             else:
-                logger.error("Failed to delete question ID %d for application %d", question_id, app_id)
+                logger.error(
+                    "Failed to delete question ID %d for application %d",
+                    question_id,
+                    app_id,
+                )
 
         self.removeRow(row)
 

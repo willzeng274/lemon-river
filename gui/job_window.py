@@ -23,7 +23,14 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QTimer
 
 from gui.dataclasses import Application, ApplicationMetadata
-from gui.widgets import PlainPasteLineEdit, PlainPasteTextEdit, JobQAListWidget, LockableField, SectionLabel, DraggableWindow
+from gui.widgets import (
+    PlainPasteLineEdit,
+    PlainPasteTextEdit,
+    JobQAListWidget,
+    LockableField,
+    SectionLabel,
+    DraggableWindow,
+)
 from gui.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
@@ -50,9 +57,10 @@ class ApplicationCard(QFrame):
         self.locked_fields[field_name] = lockable
 
         if field_name == "qa":
+
             def on_lock_toggle():
                 widget.setEnabled(not self.locked_fields[field_name].is_locked)
-            
+
             lockable.lock_button.clicked.connect(on_lock_toggle)
             widget.setEnabled(not lockable.is_locked)
         elif isinstance(widget, (QLineEdit, PlainPasteLineEdit)):
@@ -193,7 +201,9 @@ class ApplicationCard(QFrame):
 
         # Company Section
         layout.addWidget(SectionLabel("Company"))
-        company_edit = PlainPasteLineEdit(self.current_application.metadata.company or "")
+        company_edit = PlainPasteLineEdit(
+            self.current_application.metadata.company or ""
+        )
         company_edit.setPlaceholderText("Enter company name")
         self.create_field_with_lock("company", company_edit, layout)
 
@@ -204,19 +214,26 @@ class ApplicationCard(QFrame):
         self.create_field_with_lock("role", role_edit, layout)
 
         layout.addWidget(SectionLabel("Created at"))
-        created_at = PlainPasteLineEdit(self.current_application.metadata.created_at or datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        created_at = PlainPasteLineEdit(
+            self.current_application.metadata.created_at
+            or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        )
         self.create_field_with_lock("created_at", created_at, layout)
 
         # Job Description Section
         layout.addWidget(SectionLabel("Job Description"))
-        description = PlainPasteTextEdit(self.current_application.metadata.description or "")
+        description = PlainPasteTextEdit(
+            self.current_application.metadata.description or ""
+        )
         description.setPlaceholderText("Enter job description")
         description.setMaximumHeight(100)
         self.create_field_with_lock("description", description, layout)
 
         # Duration Section
         layout.addWidget(SectionLabel("Duration"))
-        duration_edit = PlainPasteLineEdit(self.current_application.metadata.duration or "")
+        duration_edit = PlainPasteLineEdit(
+            self.current_application.metadata.duration or ""
+        )
         duration_edit.setPlaceholderText("4 months, Summer 2025")
         self.create_field_with_lock("duration", duration_edit, layout)
 
@@ -237,10 +254,12 @@ class ApplicationCard(QFrame):
         layout.addWidget(SectionLabel("Questions & Answers"))
         qa_container = QWidget()
         qa_container_layout = QVBoxLayout(qa_container)
-        qa_widget = JobQAListWidget(questions=self.current_application.metadata.questions, parent=qa_container)
+        qa_widget = JobQAListWidget(
+            questions=self.current_application.metadata.questions, parent=qa_container
+        )
         qa_widget.qa_updated.connect(self.handle_qa_update)
         qa_container_layout.addWidget(qa_widget)
-        
+
         editor_layout = QHBoxLayout()
         editor_layout.addWidget(qa_container)
         layout.addLayout(editor_layout)
@@ -256,7 +275,9 @@ class ApplicationCard(QFrame):
 
         # Check URL field
         layout.addWidget(SectionLabel("Check URL"))
-        check_url = PlainPasteLineEdit(self.current_application.metadata.check_url or "")
+        check_url = PlainPasteLineEdit(
+            self.current_application.metadata.check_url or ""
+        )
         check_url.setPlaceholderText("Enter URL to check")
         self.create_field_with_lock("check_url", check_url, layout)
 
@@ -383,13 +404,13 @@ class JobApplicationWindow(DraggableWindow):
         """Update the current application"""
 
         if question is not None:
-            question = ' '.join(question.splitlines())
+            question = " ".join(question.splitlines())
         if answer is not None:
-            answer = ' '.join(answer.splitlines())
+            answer = " ".join(answer.splitlines())
         if description is not None:
-            description = ' '.join(description.splitlines())
+            description = " ".join(description.splitlines())
         if notes is not None:
-            notes = ' '.join(notes.splitlines())
+            notes = " ".join(notes.splitlines())
 
         current_card = self.findChild(ApplicationCard)
         updated_fields = set()
@@ -498,7 +519,16 @@ class JobApplicationWindow(DraggableWindow):
         for field in updated_fields:
             if field == "status":
                 self.status_combo.setCurrentText(self.current_application.status.value)
-            elif field in ["url", "role", "company", "location", "notes", "check_url", "title", "duration"]:
+            elif field in [
+                "url",
+                "role",
+                "company",
+                "location",
+                "notes",
+                "check_url",
+                "title",
+                "duration",
+            ]:
                 if hasattr(self, f"{field}_edit"):
                     getattr(self, f"{field}_edit").setText(
                         getattr(self.current_application.metadata, field) or ""
@@ -576,7 +606,9 @@ class JobApplicationWindow(DraggableWindow):
                     )
                     self.update_application(check_url=command["check_url"])
                 elif command["type"] == "update_duration":
-                    logger.info("Updating application duration: %s", command["duration"])
+                    logger.info(
+                        "Updating application duration: %s", command["duration"]
+                    )
                     self.update_application(duration=command["duration"])
         # pylint: disable=broad-exception-caught
         except Exception as e:
@@ -586,20 +618,27 @@ class JobApplicationWindow(DraggableWindow):
         """Save the current application to the database"""
         from db.adapter import DatabaseAdapter
 
-        if not self.current_application.metadata.url and not self.current_application.metadata.role:
+        if (
+            not self.current_application.metadata.url
+            and not self.current_application.metadata.role
+        ):
             logger.info("Skipping save: application is empty")
             return
 
         if not self.current_application.metadata.created_at:
-            self.current_application.metadata.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.current_application.metadata.created_at = datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
 
         db = DatabaseAdapter("db/applications.db")
 
         try:
             logger.info("Adding new application")
-            logger.info("Application: company=%s, role=%s", 
-                       getattr(self.current_application.metadata, 'company', 'N/A'),
-                       getattr(self.current_application.metadata, 'role', 'N/A'))
+            logger.info(
+                "Application: company=%s, role=%s",
+                getattr(self.current_application.metadata, "company", "N/A"),
+                getattr(self.current_application.metadata, "role", "N/A"),
+            )
             app_id = db.add_application(self.current_application)
             if app_id:
                 logger.info("Successfully added new application with ID: %s", app_id)

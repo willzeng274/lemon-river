@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 # pylint: disable=invalid-name
 class ApplicationTable(QTableWidget):
     """Table widget for displaying job applications"""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
@@ -31,14 +32,28 @@ class ApplicationTable(QTableWidget):
 
     def setup_ui(self):
         """Setup the table UI"""
-        headers = ["", "Company", "URL", "Check URL", "Role", "Location", "Status", "Duration", "Description", "Notes", "Created at", "Edit"]
+        headers = [
+            "",
+            "Company",
+            "URL",
+            "Check URL",
+            "Role",
+            "Location",
+            "Status",
+            "Duration",
+            "Description",
+            "Notes",
+            "Created at",
+            "Edit",
+        ]
         self.setColumnCount(len(headers))
         self.setHorizontalHeaderLabels(headers)
 
         self.setHorizontalScrollMode(QTableWidget.ScrollMode.ScrollPerPixel)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QTableWidget {
                 border: none;
                 background-color: #2c2c2c;
@@ -104,21 +119,22 @@ class ApplicationTable(QTableWidget):
             QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
                 height: 0px;
             }
-        """)
+        """
+        )
 
         header = self.horizontalHeader()
         column_widths = {
-            0: 25,   # Delete button
+            0: 25,  # Delete button
             1: 100,  # Company
             2: 100,  # URLs
             3: 100,  # Check URL
             4: 200,  # Role
-            5: 80,   # Location
-            6: 80,   # Status
-            7: 80,   # Duration
+            5: 80,  # Location
+            6: 80,  # Status
+            7: 80,  # Duration
             8: 200,  # Description
             9: 200,  # Notes
-            10: 160, # Created at
+            10: 160,  # Created at
             11: 40,  # Edit button
         }
 
@@ -145,7 +161,7 @@ class ApplicationTable(QTableWidget):
             return
 
         parent = self
-        while parent and not hasattr(parent, 'db'):
+        while parent and not hasattr(parent, "db"):
             parent = parent.parent()
 
         if not parent:
@@ -164,11 +180,24 @@ class ApplicationTable(QTableWidget):
             3: ("check_url", lambda x: setattr(application.metadata, "check_url", x)),
             4: ("role", lambda x: setattr(application.metadata, "role", x)),
             5: ("location", lambda x: setattr(application.metadata, "location", x)),
-            6: ("status", lambda x: setattr(application, "status", ApplicationStatus(x.strip() or ApplicationStatus.APPLYING.value))),
+            6: (
+                "status",
+                lambda x: setattr(
+                    application,
+                    "status",
+                    ApplicationStatus(x.strip() or ApplicationStatus.APPLYING.value),
+                ),
+            ),
             7: ("duration", lambda x: setattr(application.metadata, "duration", x)),
-            8: ("description", lambda x: setattr(application.metadata, "description", x)),
+            8: (
+                "description",
+                lambda x: setattr(application.metadata, "description", x),
+            ),
             9: ("notes", lambda x: setattr(application.metadata, "notes", x)),
-            10: ("created_at", lambda x: setattr(application.metadata, "created_at", x)),
+            10: (
+                "created_at",
+                lambda x: setattr(application.metadata, "created_at", x),
+            ),
         }
 
         if col in field_map:
@@ -178,26 +207,34 @@ class ApplicationTable(QTableWidget):
                 if parent.db.update_application(app_id, application):
                     logger.info("Updated %s for application %d", field_name, app_id)
                     main_window = parent
-                    while main_window and type(main_window).__name__ != 'MainWindow':
+                    while main_window and type(main_window).__name__ != "MainWindow":
                         main_window = main_window.parent()
 
                     if main_window:
-                        if field_name == 'status':
-                            main_window.emit_field_update(app_id, field_name, application.status.value)
+                        if field_name == "status":
+                            main_window.emit_field_update(
+                                app_id, field_name, application.status.value
+                            )
                         else:
                             main_window.emit_field_update(app_id, field_name, text)
                     else:
                         logger.error("Could not find MainWindow to emit signals")
                 else:
-                    logger.error("Failed to update %s for application %d", field_name, app_id)
+                    logger.error(
+                        "Failed to update %s for application %d", field_name, app_id
+                    )
             except ValueError as e:
                 logger.error("Invalid value for %s: %s", field_name, e)
                 cell_widget = self.cellWidget(row, col)
                 if cell_widget:
                     line_edit = cell_widget.findChild(QLineEdit)
                     if line_edit:
-                        current_value = getattr(application.metadata, field_name) if hasattr(application.metadata, field_name) else getattr(application, field_name)
-                        if field_name == 'status':
+                        current_value = (
+                            getattr(application.metadata, field_name)
+                            if hasattr(application.metadata, field_name)
+                            else getattr(application, field_name)
+                        )
+                        if field_name == "status":
                             current_value = current_value.value
                         line_edit.setText(str(current_value))
 
@@ -207,7 +244,7 @@ class ApplicationTable(QTableWidget):
         row = 0
         self.insertRow(row)
 
-        app_id = getattr(application, 'id', None)
+        app_id = getattr(application, "id", None)
         if app_id is None:
             logger.error("Application has no ID when adding to table")
             return
@@ -224,7 +261,9 @@ class ApplicationTable(QTableWidget):
         delete_button = QPushButton("×")
         delete_button.setObjectName("deleteButton")
         delete_button.setFixedSize(24, 24)
-        delete_button.clicked.connect(lambda checked, r=row: self.delete_application_row(r))
+        delete_button.clicked.connect(
+            lambda checked, r=row: self.delete_application_row(r)
+        )
         delete_layout.addWidget(delete_button)
         self.setCellWidget(row, 0, delete_container)
 
@@ -241,17 +280,20 @@ class ApplicationTable(QTableWidget):
         main_window = None
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 main_window = parent
                 break
             parent = parent.parent()
 
         if main_window:
-            edit_button.clicked.connect(lambda checked, r=row: main_window.open_workspace_tab(r))
+            edit_button.clicked.connect(
+                lambda checked, r=row: main_window.open_workspace_tab(r)
+            )
         else:
             logger.error("Could not find MainWindow parent")
 
-        edit_button.setStyleSheet("""
+        edit_button.setStyleSheet(
+            """
             QPushButton#editButton {
                 background-color: transparent;
                 color: #8e8e8e;
@@ -262,7 +304,8 @@ class ApplicationTable(QTableWidget):
             QPushButton#editButton:hover {
                 color: #007acc;
             }
-        """)
+        """
+        )
 
         edit_layout.addWidget(edit_button)
         self.setCellWidget(row, 11, edit_container)
@@ -275,8 +318,22 @@ class ApplicationTable(QTableWidget):
             (5, application.metadata.location),
             (6, application.status.value),
             (7, application.metadata.duration),
-            (8, application.metadata.description[:100] + "..." if len(application.metadata.description) > 100 else application.metadata.description),
-            (9, application.metadata.notes[:100] + "..." if len(application.metadata.notes) > 100 else application.metadata.notes),
+            (
+                8,
+                (
+                    application.metadata.description[:100] + "..."
+                    if len(application.metadata.description) > 100
+                    else application.metadata.description
+                ),
+            ),
+            (
+                9,
+                (
+                    application.metadata.notes[:100] + "..."
+                    if len(application.metadata.notes) > 100
+                    else application.metadata.notes
+                ),
+            ),
             (10, application.metadata.created_at),
         ]
 
@@ -287,7 +344,8 @@ class ApplicationTable(QTableWidget):
             layout.setSpacing(0)
 
             text_edit = TabNavigationLineEdit(row, col, self, text or "")
-            text_edit.setStyleSheet("""
+            text_edit.setStyleSheet(
+                """
                 QLineEdit {
                     background-color: transparent;
                     color: #ffffff;
@@ -296,7 +354,8 @@ class ApplicationTable(QTableWidget):
                     margin: 0;
                     font-size: 13px;
                 }
-            """)
+            """
+            )
             layout.addWidget(text_edit)
             self.setCellWidget(row, col, container)
 
@@ -305,7 +364,7 @@ class ApplicationTable(QTableWidget):
         main_window = None
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 main_window = parent
                 break
             parent = parent.parent()
@@ -318,7 +377,9 @@ class ApplicationTable(QTableWidget):
     def delete_row(self, row):
         """Delete a row from the table"""
         if row in self.application_ids:
-            logger.info("Deleting row %d with application ID %d", row, self.application_ids[row])
+            logger.info(
+                "Deleting row %d with application ID %d", row, self.application_ids[row]
+            )
             del self.application_ids[row]
 
         self.removeRow(row)
@@ -327,26 +388,34 @@ class ApplicationTable(QTableWidget):
         for old_row, app_id in self.application_ids.items():
             if old_row > row:
                 new_ids[old_row - 1] = app_id
-                logger.info("Moving application %d from row %d to %d", app_id, old_row, old_row - 1)
+                logger.info(
+                    "Moving application %d from row %d to %d",
+                    app_id,
+                    old_row,
+                    old_row - 1,
+                )
             else:
                 new_ids[old_row] = app_id
-        self.application_ids = new_ids 
+        self.application_ids = new_ids
 
     def handle_field_update(self, app_id: int, field_name: str, new_value: object):
         """Handle field updates from other tabs"""
-        if not hasattr(self, 'current_application_id') or app_id != self.current_application_id:
+        if (
+            not hasattr(self, "current_application_id")
+            or app_id != self.current_application_id
+        ):
             return
 
         field_map = {
-            'company': self.company_edit,
-            'role': self.role_edit,
-            'location': self.location_edit,
-            'url': self.url_edit,
-            'check_url': self.check_url_edit,
-            'duration': self.duration_edit,
-            'status': self.status_edit,
-            'description': self.description_edit,
-            'notes': self.notes_edit,
+            "company": self.company_edit,
+            "role": self.role_edit,
+            "location": self.location_edit,
+            "url": self.url_edit,
+            "check_url": self.check_url_edit,
+            "duration": self.duration_edit,
+            "status": self.status_edit,
+            "description": self.description_edit,
+            "notes": self.notes_edit,
         }
 
         if field_name in field_map:

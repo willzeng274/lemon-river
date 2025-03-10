@@ -29,6 +29,7 @@ logger = logging.getLogger(__name__)
 # pylint: disable=invalid-name
 class WorkspaceTab(QWidget):
     """Tab for editing application details and documents"""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self._updating_application_selector = False
@@ -46,16 +47,20 @@ class WorkspaceTab(QWidget):
         selector_layout.setSpacing(12)
 
         self.application_selector = ApplicationSelector()
-        self.application_selector.currentApplicationChanged.connect(self.load_selected_application)
+        self.application_selector.currentApplicationChanged.connect(
+            self.load_selected_application
+        )
         selector_layout.addWidget(self.application_selector)
         selector_layout.addStretch()
         layout.addLayout(selector_layout)
 
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QWidget {
                 background: transparent;
             }
-        """)
+        """
+        )
 
         split_widget = QWidget()
         split_layout = QHBoxLayout(split_widget)
@@ -72,7 +77,8 @@ class WorkspaceTab(QWidget):
 
         editor_scroll = QScrollArea()
         editor_scroll.setWidgetResizable(True)
-        editor_scroll.setStyleSheet("""
+        editor_scroll.setStyleSheet(
+            """
             QScrollArea {
                 border: none;
                 background-color: transparent;
@@ -89,7 +95,8 @@ class WorkspaceTab(QWidget):
             QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
                 height: 0px;
             }
-        """)
+        """
+        )
 
         editor_widget = QWidget()
         editor_layout = QVBoxLayout(editor_widget)
@@ -99,7 +106,8 @@ class WorkspaceTab(QWidget):
         button_layout = QHBoxLayout()
         self.create_resume_btn = QPushButton("Create Resume (c)")
         self.create_resume_btn.clicked.connect(self.create_resume)
-        self.create_resume_btn.setStyleSheet("""
+        self.create_resume_btn.setStyleSheet(
+            """
             QPushButton {
                 background-color: #2c2c2c;
                 color: #ffffff;
@@ -111,7 +119,8 @@ class WorkspaceTab(QWidget):
             QPushButton:hover {
                 background-color: #3c3c3c;
             }
-        """)
+        """
+        )
         # create_cover_btn = QPushButton("Create Cover Letter")
         # create_cover_btn.setStyleSheet(create_resume_btn.styleSheet())
 
@@ -145,7 +154,8 @@ class WorkspaceTab(QWidget):
             widget = widget_class()
             widget.setObjectName(obj_name)
             if isinstance(widget, QLineEdit):
-                widget.setStyleSheet("""
+                widget.setStyleSheet(
+                    """
                     QLineEdit {
                         background-color: #2c2c2c;
                         color: #ffffff;
@@ -157,12 +167,14 @@ class WorkspaceTab(QWidget):
                     QLineEdit:focus {
                         background-color: #3c3c3c;
                     }
-                """)
+                """
+                )
                 widget.textChanged.connect(self.handle_field_change)
             elif isinstance(widget, StatusDropdown):
                 widget.currentTextChanged.connect(self.handle_field_change)
             elif isinstance(widget, QTextEdit):
-                widget.setStyleSheet("""
+                widget.setStyleSheet(
+                    """
                     QTextEdit {
                         background-color: #2c2c2c;
                         color: #ffffff;
@@ -174,7 +186,8 @@ class WorkspaceTab(QWidget):
                     QTextEdit:focus {
                         background-color: #3c3c3c;
                     }
-                """)
+                """
+                )
                 widget.textChanged.connect(self.handle_field_change)
                 widget.setMinimumHeight(100)
 
@@ -190,7 +203,8 @@ class WorkspaceTab(QWidget):
 
         add_qa_btn = QPushButton("+ Add Question")
         add_qa_btn.setObjectName("addQuestionButton")
-        add_qa_btn.setStyleSheet("""
+        add_qa_btn.setStyleSheet(
+            """
             QPushButton {
                 background-color: #2c2c2c;
                 color: #ffffff;
@@ -204,7 +218,8 @@ class WorkspaceTab(QWidget):
             QPushButton:hover {
                 background-color: #3c3c3c;
             }
-        """)
+        """
+        )
         editor_layout.addWidget(add_qa_btn)
 
         qa_container = QWidget()
@@ -237,11 +252,11 @@ class WorkspaceTab(QWidget):
 
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
-        if not parent or not hasattr(parent, 'db'):
+        if not parent or not hasattr(parent, "db"):
             logger.error("Could not find MainWindow parent with database connection")
             return
 
@@ -259,7 +274,9 @@ class WorkspaceTab(QWidget):
         application.metadata.url = self.url_edit.text()
         application.metadata.check_url = self.check_url_edit.text()
         application.metadata.duration = self.duration_edit.text()
-        application.metadata.resume_path = getattr(application.metadata, 'resume_path', None)
+        application.metadata.resume_path = getattr(
+            application.metadata, "resume_path", None
+        )
 
         status_text = self.status_edit.currentText()
         try:
@@ -274,45 +291,70 @@ class WorkspaceTab(QWidget):
 
         if parent.db.update_application(self.current_application_id, application):
             if sender in [self.company_edit, self.role_edit]:
-                new_text = f"{application.metadata.company} - {application.metadata.role}"
-                self.application_selector.update_option(self.current_application_id, new_text)
+                new_text = (
+                    f"{application.metadata.company} - {application.metadata.role}"
+                )
+                self.application_selector.update_option(
+                    self.current_application_id, new_text
+                )
 
-            parent.emit_field_update(self.current_application_id, 'company', application.metadata.company)
-            parent.emit_field_update(self.current_application_id, 'role', application.metadata.role)
-            parent.emit_field_update(self.current_application_id, 'location', application.metadata.location)
-            parent.emit_field_update(self.current_application_id, 'url', application.metadata.url)
-            parent.emit_field_update(self.current_application_id, 'check_url', application.metadata.check_url)
-            parent.emit_field_update(self.current_application_id, 'duration', application.metadata.duration)
-            parent.emit_field_update(self.current_application_id, 'status', application.status.value)
-            parent.emit_field_update(self.current_application_id, 'description', application.metadata.description)
-            parent.emit_field_update(self.current_application_id, 'notes', application.metadata.notes)
+            parent.emit_field_update(
+                self.current_application_id, "company", application.metadata.company
+            )
+            parent.emit_field_update(
+                self.current_application_id, "role", application.metadata.role
+            )
+            parent.emit_field_update(
+                self.current_application_id, "location", application.metadata.location
+            )
+            parent.emit_field_update(
+                self.current_application_id, "url", application.metadata.url
+            )
+            parent.emit_field_update(
+                self.current_application_id, "check_url", application.metadata.check_url
+            )
+            parent.emit_field_update(
+                self.current_application_id, "duration", application.metadata.duration
+            )
+            parent.emit_field_update(
+                self.current_application_id, "status", application.status.value
+            )
+            parent.emit_field_update(
+                self.current_application_id,
+                "description",
+                application.metadata.description,
+            )
+            parent.emit_field_update(
+                self.current_application_id, "notes", application.metadata.notes
+            )
 
     def refresh_selector(self):
         """Refresh the application selector while maintaining current selection"""
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
-        if not parent or not hasattr(parent, 'db'):
+        if not parent or not hasattr(parent, "db"):
             logger.error("Could not find MainWindow parent with database connection")
             return
 
-        current_id = getattr(self, 'current_application_id', None)
+        current_id = getattr(self, "current_application_id", None)
 
         self.application_selector.blockSignals(True)
         try:
             self.application_selector.clear()
 
-            applications = sorted(parent.applications, key=lambda x: x.metadata.created_at, reverse=True)
+            applications = sorted(
+                parent.applications, key=lambda x: x.metadata.created_at, reverse=True
+            )
 
             for app in applications:
-                app_id = getattr(app, 'id', None)
+                app_id = getattr(app, "id", None)
                 if app_id is not None:
                     self.application_selector.add_option(
-                        f"{app.metadata.company} - {app.metadata.role}",
-                        app_id
+                        f"{app.metadata.company} - {app.metadata.role}", app_id
                     )
 
             if current_id is not None:
@@ -324,19 +366,24 @@ class WorkspaceTab(QWidget):
 
     def handle_qa_update(self, questions_list):
         """Handle updates to the Q&A list from the QA widget"""
-        logger.info("Handling QA update from widget with %d questions", len(questions_list))
-        
-        if not hasattr(self, 'current_application_id') or self.current_application_id < 0:
+        logger.info(
+            "Handling QA update from widget with %d questions", len(questions_list)
+        )
+
+        if (
+            not hasattr(self, "current_application_id")
+            or self.current_application_id < 0
+        ):
             logger.warning("Cannot handle QA update: No application selected")
             return
 
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
-        if not parent or not hasattr(parent, 'db'):
+        if not parent or not hasattr(parent, "db"):
             logger.error("Could not find MainWindow parent with database connection")
             return
 
@@ -352,16 +399,24 @@ class WorkspaceTab(QWidget):
 
             if question_id < 0:
                 logger.info("Adding new question: %s", question[:50])
-                new_question_id = parent.db.add_question(self.current_application_id, question, answer)
+                new_question_id = parent.db.add_question(
+                    self.current_application_id, question, answer
+                )
                 if new_question_id > 0:
                     self._update_qa_item_id(question, answer, new_question_id)
                     parent.emit_qa_add(self.current_application_id, new_question_id)
             else:
-                logger.info("Updating existing question ID %d: %s", question_id, question[:50])
+                logger.info(
+                    "Updating existing question ID %d: %s", question_id, question[:50]
+                )
                 if parent.db.update_question(question_id, question, answer):
-                    parent.emit_qa_update(self.current_application_id, question_id, question, answer)
+                    parent.emit_qa_update(
+                        self.current_application_id, question_id, question, answer
+                    )
 
-        all_questions = parent.db.get_questions_for_application(self.current_application_id)
+        all_questions = parent.db.get_questions_for_application(
+            self.current_application_id
+        )
         current_question_ids = {q[0] for q in questions_list}
         for q_id, _, _ in all_questions:
             if q_id not in current_question_ids:
@@ -378,23 +433,32 @@ class WorkspaceTab(QWidget):
                 q, a = widget.question, widget.answer
                 if q == question and a == answer and widget.question_id < 0:
                     widget.question_id = new_id
-                    logger.debug("Updated question ID for '%s' to %d", question[:50], new_id)
+                    logger.debug(
+                        "Updated question ID for '%s' to %d", question[:50], new_id
+                    )
                     break
 
     def handle_qa_table_update(self, app_id, question_id):
         """Handle updates from the QA table"""
-        logger.info("Handling QA update from table for app %d, question ID %d", app_id, question_id)
+        logger.info(
+            "Handling QA update from table for app %d, question ID %d",
+            app_id,
+            question_id,
+        )
 
-        if not hasattr(self, 'current_application_id') or self.current_application_id != app_id:
+        if (
+            not hasattr(self, "current_application_id")
+            or self.current_application_id != app_id
+        ):
             return
 
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
-        if not parent or not hasattr(parent, 'db'):
+        if not parent or not hasattr(parent, "db"):
             logger.error("Could not find MainWindow parent with database connection")
             return
 
@@ -408,18 +472,25 @@ class WorkspaceTab(QWidget):
 
     def handle_qa_table_delete(self, app_id, question_id):
         """Handle deletion from the QA table"""
-        logger.info("Handling QA deletion from table for app %d, question ID %d", app_id, question_id)
+        logger.info(
+            "Handling QA deletion from table for app %d, question ID %d",
+            app_id,
+            question_id,
+        )
 
-        if not hasattr(self, 'current_application_id') or self.current_application_id != app_id:
+        if (
+            not hasattr(self, "current_application_id")
+            or self.current_application_id != app_id
+        ):
             return
 
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
-        if not parent or not hasattr(parent, 'db'):
+        if not parent or not hasattr(parent, "db"):
             logger.error("Could not find MainWindow parent with database connection")
             return
 
@@ -439,11 +510,11 @@ class WorkspaceTab(QWidget):
 
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
-        if not parent or not hasattr(parent, 'db'):
+        if not parent or not hasattr(parent, "db"):
             logger.error("Could not find MainWindow parent with database connection")
             return
 
@@ -470,7 +541,9 @@ class WorkspaceTab(QWidget):
         self.description_edit.setText(application.metadata.description or "")
         self.notes_edit.setText(application.metadata.notes or "")
 
-        if application.metadata.resume_path and os.path.exists(application.metadata.resume_path):
+        if application.metadata.resume_path and os.path.exists(
+            application.metadata.resume_path
+        ):
             self.pdf_viewer.load_pdf(application.metadata.resume_path)
             self.create_resume_btn.hide()
         else:
@@ -483,23 +556,27 @@ class WorkspaceTab(QWidget):
         finally:
             self.qa_list.blockSignals(False)
 
-        logger.info("Application %d loaded successfully with %d questions", app_id, len(questions))
+        logger.info(
+            "Application %d loaded successfully with %d questions",
+            app_id,
+            len(questions),
+        )
 
     def add_qa(self):
         """Add a new Q&A item"""
         logger.info("Adding new Q&A item")
 
-        if not hasattr(self, 'current_application_id'):
+        if not hasattr(self, "current_application_id"):
             logger.warning("Cannot add Q&A: No application selected")
             return
 
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
-        if not parent or not hasattr(parent, 'db'):
+        if not parent or not hasattr(parent, "db"):
             logger.error("Could not find MainWindow parent with database connection")
             return
 
@@ -524,7 +601,7 @@ class WorkspaceTab(QWidget):
         """Open resume creation dialog"""
         logger.info("Opening resume creation dialog")
 
-        if not hasattr(self, 'current_application_id'):
+        if not hasattr(self, "current_application_id"):
             logger.warning("Cannot create resume: No application selected")
             return
 
@@ -540,63 +617,87 @@ class WorkspaceTab(QWidget):
         """Handle when a resume is created"""
         logger.info("[Signal] Resume created signal received with path: %s", pdf_path)
 
-        if not hasattr(self, 'current_application_id') or not pdf_path or not os.path.exists(pdf_path):
-            logger.warning("[Signal] Cannot handle resume_created: current_application_id=%s, pdf_path=%s, exists=%s", 
-                           getattr(self, 'current_application_id', None), pdf_path, os.path.exists(pdf_path) if pdf_path else False)
+        if (
+            not hasattr(self, "current_application_id")
+            or not pdf_path
+            or not os.path.exists(pdf_path)
+        ):
+            logger.warning(
+                "[Signal] Cannot handle resume_created: current_application_id=%s, pdf_path=%s, exists=%s",
+                getattr(self, "current_application_id", None),
+                pdf_path,
+                os.path.exists(pdf_path) if pdf_path else False,
+            )
             return
 
         parent = self
         while parent:
-            if type(parent).__name__ == 'MainWindow':
+            if type(parent).__name__ == "MainWindow":
                 break
             parent = parent.parent()
 
-        if not parent or not hasattr(parent, 'db'):
-            logger.error("[Signal] Could not find MainWindow parent with database connection")
+        if not parent or not hasattr(parent, "db"):
+            logger.error(
+                "[Signal] Could not find MainWindow parent with database connection"
+            )
             return
 
         application = parent.db.get_application(self.current_application_id)
         if not application:
-            logger.error("[Signal] Application not found for ID %s", self.current_application_id)
+            logger.error(
+                "[Signal] Application not found for ID %s", self.current_application_id
+            )
             return
 
         application.metadata.resume_path = pdf_path
         if parent.db.update_application(self.current_application_id, application):
-            logger.info("[Signal] Successfully updated application %d with resume path: %s", self.current_application_id, pdf_path)
+            logger.info(
+                "[Signal] Successfully updated application %d with resume path: %s",
+                self.current_application_id,
+                pdf_path,
+            )
             self.create_resume_btn.hide()
         else:
-            logger.error("[Signal] Failed to update application %d with resume path", self.current_application_id)
+            logger.error(
+                "[Signal] Failed to update application %d with resume path",
+                self.current_application_id,
+            )
 
         self.pdf_viewer.load_pdf(pdf_path)
 
     def handle_field_update(self, app_id: int, field_name: str, new_value: object):
         """Handle field updates from other tabs"""
-        if not hasattr(self, 'current_application_id') or app_id != self.current_application_id:
+        if (
+            not hasattr(self, "current_application_id")
+            or app_id != self.current_application_id
+        ):
             return
 
-        if field_name in ['company', 'role']:
+        if field_name in ["company", "role"]:
             parent = self
             while parent:
-                if type(parent).__name__ == 'MainWindow':
+                if type(parent).__name__ == "MainWindow":
                     break
                 parent = parent.parent()
 
-            if parent and hasattr(parent, 'db'):
+            if parent and hasattr(parent, "db"):
                 application = parent.db.get_application(app_id)
                 if application:
-                    new_text = f"{application.metadata.company} - {application.metadata.role}"
+                    new_text = (
+                        f"{application.metadata.company} - {application.metadata.role}"
+                    )
                     self.application_selector.update_option(app_id, new_text)
 
         field_map = {
-            'company': self.company_edit,
-            'role': self.role_edit,
-            'location': self.location_edit,
-            'url': self.url_edit,
-            'check_url': self.check_url_edit,
-            'duration': self.duration_edit,
-            'status': self.status_edit,
-            'description': self.description_edit,
-            'notes': self.notes_edit,
+            "company": self.company_edit,
+            "role": self.role_edit,
+            "location": self.location_edit,
+            "url": self.url_edit,
+            "check_url": self.check_url_edit,
+            "duration": self.duration_edit,
+            "status": self.status_edit,
+            "description": self.description_edit,
+            "notes": self.notes_edit,
         }
 
         if field_name in field_map:
@@ -615,19 +716,24 @@ class WorkspaceTab(QWidget):
         """Handle Q&A additions from other tabs"""
         logger.info("Handling QA add for app %d, question ID %d", app_id, question_id)
 
-        if not hasattr(self, 'current_application_id') or self.current_application_id != app_id:
+        if (
+            not hasattr(self, "current_application_id")
+            or self.current_application_id != app_id
+        ):
             return
 
         self.qa_list.blockSignals(True)
         try:
             parent = self
             while parent:
-                if type(parent).__name__ == 'MainWindow':
+                if type(parent).__name__ == "MainWindow":
                     break
                 parent = parent.parent()
 
-            if not parent or not hasattr(parent, 'db'):
-                logger.error("Could not find MainWindow parent with database connection")
+            if not parent or not hasattr(parent, "db"):
+                logger.error(
+                    "Could not find MainWindow parent with database connection"
+                )
                 return
 
             questions = parent.db.get_questions_for_application(app_id)
@@ -637,21 +743,28 @@ class WorkspaceTab(QWidget):
 
     def handle_qa_delete(self, app_id: int, question_id: int):
         """Handle Q&A deletions from other tabs"""
-        logger.info("Handling QA delete for app %d, question ID %d", app_id, question_id)
+        logger.info(
+            "Handling QA delete for app %d, question ID %d", app_id, question_id
+        )
 
-        if not hasattr(self, 'current_application_id') or self.current_application_id != app_id:
+        if (
+            not hasattr(self, "current_application_id")
+            or self.current_application_id != app_id
+        ):
             return
 
         self.qa_list.blockSignals(True)
         try:
             parent = self
             while parent:
-                if type(parent).__name__ == 'MainWindow':
+                if type(parent).__name__ == "MainWindow":
                     break
                 parent = parent.parent()
 
-            if not parent or not hasattr(parent, 'db'):
-                logger.error("Could not find MainWindow parent with database connection")
+            if not parent or not hasattr(parent, "db"):
+                logger.error(
+                    "Could not find MainWindow parent with database connection"
+                )
                 return
 
             questions = parent.db.get_questions_for_application(app_id)
@@ -661,7 +774,7 @@ class WorkspaceTab(QWidget):
 
     def handle_application_delete(self, app_id: int):
         """Handle application deletion from other tabs"""
-        if not hasattr(self, 'current_application_id'):
+        if not hasattr(self, "current_application_id"):
             return
 
         if self.current_application_id == app_id:
@@ -680,7 +793,7 @@ class WorkspaceTab(QWidget):
 
     def handle_application_add(self, application):
         """Handle new application addition"""
-        app_id = getattr(application, 'id', None)
+        app_id = getattr(application, "id", None)
         if app_id is None:
             return
 
@@ -688,7 +801,10 @@ class WorkspaceTab(QWidget):
 
     def handle_resume_update(self, app_id: int, resume_path: str):
         """Handle resume updates"""
-        if not hasattr(self, 'current_application_id') or self.current_application_id != app_id:
+        if (
+            not hasattr(self, "current_application_id")
+            or self.current_application_id != app_id
+        ):
             return
 
         if resume_path and os.path.exists(resume_path):
@@ -702,7 +818,10 @@ class WorkspaceTab(QWidget):
         """Handle when the tab becomes visible"""
         super().showEvent(event)
 
-        if hasattr(self, '_updating_application_selector') and self._updating_application_selector:
+        if (
+            hasattr(self, "_updating_application_selector")
+            and self._updating_application_selector
+        ):
             return
 
         # update the dropdown
@@ -711,14 +830,17 @@ class WorkspaceTab(QWidget):
         try:
             parent = self
             while parent:
-                if type(parent).__name__ == 'MainWindow':
+                if type(parent).__name__ == "MainWindow":
                     break
                 parent = parent.parent()
 
             if parent:
                 parent.update_application_selector()
 
-            if hasattr(self, 'pdf_viewer') and self.pdf_viewer.pdf_document.pageCount() > 0:
+            if (
+                hasattr(self, "pdf_viewer")
+                and self.pdf_viewer.pdf_document.pageCount() > 0
+            ):
                 logger.info("Tab shown, fitting PDF to height")
                 self.pdf_viewer.fit_to_height()
         finally:

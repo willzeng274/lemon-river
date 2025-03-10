@@ -6,8 +6,14 @@ import logging
 
 # pylint: disable=no-name-in-module
 from PyQt6.QtWidgets import (
-    QLineEdit, QApplication, QWidget, QVBoxLayout, QLabel, 
-    QFrame, QHBoxLayout, QScrollArea
+    QLineEdit,
+    QApplication,
+    QWidget,
+    QVBoxLayout,
+    QLabel,
+    QFrame,
+    QHBoxLayout,
+    QScrollArea,
 )
 from PyQt6.QtCore import Qt, pyqtSignal, QPoint, QEvent, QSize
 
@@ -15,13 +21,16 @@ from gui.dataclasses import ApplicationStatus
 
 logger = logging.getLogger(__name__)
 
+
 # pylint: disable=invalid-name
 class SearchBar(QLineEdit):
     """Search bar with consistent styling"""
+
     def __init__(self, placeholder="Search for applications... (f)"):
         super().__init__()
         self.setPlaceholderText(placeholder)
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             QLineEdit {
                 border: none;
                 border-radius: 6px;
@@ -37,13 +46,15 @@ class SearchBar(QLineEdit):
             QLineEdit::placeholder {
                 color: #8e8e8e;
             }
-        """)
+        """
+        )
 
 
 class TabNavigationLineEdit(QLineEdit):
     """LineEdit that supports tab navigation between cells"""
+
     def __init__(self, row: int, col: int, table, text: str = ""):
-        super().__init__() # without text
+        super().__init__()  # without text
         self.row = row
         self.col = col
         self.table = table
@@ -153,6 +164,7 @@ class TabNavigationLineEdit(QLineEdit):
 
 class DropdownContainer(QWidget):
     """Container widget for dropdown options that forwards events to parent"""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.selector = None
@@ -165,8 +177,10 @@ class DropdownContainer(QWidget):
         else:
             super().keyPressEvent(event)
 
+
 class DropdownScrollArea(QScrollArea):
     """Custom scroll area that forwards events to parent"""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.selector = None
@@ -185,6 +199,7 @@ class DropdownScrollArea(QScrollArea):
             self.selector.toggle_dropdown()
             return True
         return super().event(event)
+
 
 class ApplicationSelector(QFrame):
     """Custom application selector widget with modern styling"""
@@ -239,7 +254,9 @@ class ApplicationSelector(QFrame):
             return
 
         try:
-            current_idx = app_ids.index(self.focused_id if self.focused_id is not None else self.current_id)
+            current_idx = app_ids.index(
+                self.focused_id if self.focused_id is not None else self.current_id
+            )
             next_idx = current_idx + 1
             if next_idx >= len(app_ids):
                 return
@@ -258,7 +275,9 @@ class ApplicationSelector(QFrame):
             return
 
         try:
-            current_idx = app_ids.index(self.focused_id if self.focused_id is not None else self.current_id)
+            current_idx = app_ids.index(
+                self.focused_id if self.focused_id is not None else self.current_id
+            )
             prev_idx = current_idx - 1
             if prev_idx < 0:
                 return
@@ -273,12 +292,12 @@ class ApplicationSelector(QFrame):
             return False
 
         if self.focused_id is not None and self.focused_id in self.options:
-            prev_option = self.options[self.focused_id]['widget']
+            prev_option = self.options[self.focused_id]["widget"]
             prev_option.setProperty("focused", "false")
             prev_option.style().unpolish(prev_option)
             prev_option.style().polish(prev_option)
 
-        option = self.options[app_id]['widget']
+        option = self.options[app_id]["widget"]
         option.setProperty("focused", "true")
         option.style().unpolish(option)
         option.style().polish(option)
@@ -297,19 +316,16 @@ class ApplicationSelector(QFrame):
 
         content_height = min(300, self.options_layout.sizeHint().height() + 10)
 
-        self.dropdown.setGeometry(
-            pos.x(),
-            pos.y() + 4,
-            self.width(),
-            content_height
-        )
+        self.dropdown.setGeometry(pos.x(), pos.y() + 4, self.width(), content_height)
 
-        self.arrow_label.setStyleSheet("""
+        self.arrow_label.setStyleSheet(
+            """
             QLabel {
                 color: #aaaaaa;
                 font-size: 10px;
             }
-        """)
+        """
+        )
         self.arrow_label.setText("▲")
 
         if self.current_id is not None:
@@ -327,16 +343,18 @@ class ApplicationSelector(QFrame):
             self.is_open = False
             self.focused_id = None
 
-            self.arrow_label.setStyleSheet("""
+            self.arrow_label.setStyleSheet(
+                """
                 QLabel {
                     color: #aaaaaa;
                     font-size: 10px;
                 }
-            """)
+            """
+            )
             self.arrow_label.setText("▼")
 
             for option_data in self.options.values():
-                option = option_data['widget']
+                option = option_data["widget"]
                 option.setProperty("focused", "false")
                 option.style().unpolish(option)
 
@@ -361,11 +379,7 @@ class ApplicationSelector(QFrame):
         label.setWordWrap(True)
         layout.addWidget(label)
 
-        self.options[app_id] = {
-            'text': text,
-            'widget': option,
-            'label': label
-        }
+        self.options[app_id] = {"text": text, "widget": option, "label": label}
 
         def handle_option_click(e):
             if e.button() == Qt.MouseButton.LeftButton:
@@ -384,9 +398,9 @@ class ApplicationSelector(QFrame):
         if app_id not in self.options:
             return False
 
-        self.options[app_id]['text'] = new_text
+        self.options[app_id]["text"] = new_text
 
-        self.options[app_id]['label'].setText(new_text)
+        self.options[app_id]["label"].setText(new_text)
 
         if self.current_id == app_id:
             self.current_text = new_text
@@ -400,18 +414,18 @@ class ApplicationSelector(QFrame):
             return False
 
         if self.current_id is not None and self.current_id in self.options:
-            prev_option = self.options[self.current_id]['widget']
+            prev_option = self.options[self.current_id]["widget"]
             prev_option.setProperty("selected", "false")
             prev_option.style().unpolish(prev_option)
             prev_option.style().polish(prev_option)
 
-        option = self.options[app_id]['widget']
+        option = self.options[app_id]["widget"]
         option.setProperty("selected", "true")
         option.style().unpolish(option)
         option.style().polish(option)
 
         self.current_id = app_id
-        self.current_text = self.options[app_id]['text']
+        self.current_text = self.options[app_id]["text"]
         self.selected_label.setText(self.current_text)
 
         self.hide_dropdown()
@@ -424,18 +438,18 @@ class ApplicationSelector(QFrame):
             return False
 
         if self.current_id is not None and self.current_id in self.options:
-            prev_option = self.options[self.current_id]['widget']
+            prev_option = self.options[self.current_id]["widget"]
             prev_option.setProperty("selected", "false")
             prev_option.style().unpolish(prev_option)
             prev_option.style().polish(prev_option)
 
-        option = self.options[app_id]['widget']
+        option = self.options[app_id]["widget"]
         option.setProperty("selected", "true")
         option.style().unpolish(option)
         option.style().polish(option)
 
         self.current_id = app_id
-        self.current_text = self.options[app_id]['text']
+        self.current_text = self.options[app_id]["text"]
         self.selected_label.setText(self.current_text)
 
         self.hide_dropdown()
@@ -446,7 +460,7 @@ class ApplicationSelector(QFrame):
         if app_id not in self.options:
             return False
 
-        option = self.options[app_id]['widget']
+        option = self.options[app_id]["widget"]
         self.options_layout.removeWidget(option)
         option.setParent(None)
         option.deleteLater()
@@ -484,7 +498,9 @@ class ApplicationSelector(QFrame):
             pos = event.globalPosition().toPoint()
 
             in_header = self.header.rect().contains(self.header.mapFromGlobal(pos))
-            in_dropdown = self.dropdown.rect().contains(self.dropdown.mapFromGlobal(pos))
+            in_dropdown = self.dropdown.rect().contains(
+                self.dropdown.mapFromGlobal(pos)
+            )
 
             if not in_header and not in_dropdown:
                 self.hide_dropdown()
@@ -517,22 +533,26 @@ class ApplicationSelector(QFrame):
         header_layout.setSpacing(8)
 
         self.selected_label = QLabel(self.current_text)
-        self.selected_label.setStyleSheet("""
+        self.selected_label.setStyleSheet(
+            """
             QLabel {
                 color: #ffffff;
                 font-size: 13px;
             }
-        """)
+        """
+        )
         header_layout.addWidget(self.selected_label)
         header_layout.addStretch()
 
         self.arrow_label = QLabel("▼")
-        self.arrow_label.setStyleSheet("""
+        self.arrow_label.setStyleSheet(
+            """
             QLabel {
                 color: #aaaaaa;
                 font-size: 10px;
             }
-        """)
+        """
+        )
         header_layout.addWidget(self.arrow_label)
 
         layout.addWidget(self.header)
@@ -541,14 +561,19 @@ class ApplicationSelector(QFrame):
 
         self.dropdown = DropdownScrollArea()
         self.dropdown.selector = self
-        self.dropdown.setWindowFlags(Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint)
+        self.dropdown.setWindowFlags(
+            Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint
+        )
         self.dropdown.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.dropdown.setAttribute(Qt.WidgetAttribute.WA_X11NetWmWindowTypeDropDownMenu)
-        self.dropdown.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.dropdown.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
         self.dropdown.setWidgetResizable(True)
         self.dropdown.setVisible(False)
 
-        self.dropdown.setStyleSheet("""
+        self.dropdown.setStyleSheet(
+            """
             QScrollArea#dropdown {
                 background-color: #2a2a2a;
                 border: 1px solid #3a3a3a;
@@ -610,7 +635,8 @@ class ApplicationSelector(QFrame):
             QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
                 background: none;
             }
-        """)
+        """
+        )
 
         self.options_container = DropdownContainer()
         self.options_container.selector = self
@@ -624,7 +650,8 @@ class ApplicationSelector(QFrame):
 
         QApplication.instance().installEventFilter(self)
 
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             ApplicationSelector {
                 border: 1px solid #3a3a3a;
                 border-radius: 6px;
@@ -643,7 +670,8 @@ class ApplicationSelector(QFrame):
             #selectorHeader:hover {
                 background-color: #333333;
             }
-        """)
+        """
+        )
 
     def toggle_dropdown(self):
         """Toggle dropdown visibility"""
@@ -652,11 +680,14 @@ class ApplicationSelector(QFrame):
         else:
             self.show_dropdown()
 
+
 class StatusDropdown(QWidget):
     """Custom dropdown for selecting application status with consistent styling"""
 
-    statusChanged = pyqtSignal(str) # new status as str
-    currentTextChanged = pyqtSignal(str) # directly connected to statusChanged, but used in the workspace tab
+    statusChanged = pyqtSignal(str)  # new status as str
+    currentTextChanged = pyqtSignal(
+        str
+    )  # directly connected to statusChanged, but used in the workspace tab
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -679,7 +710,9 @@ class StatusDropdown(QWidget):
         self.label = QLabel(self.current_status)
         self.arrow = QLabel("▼")
         self.arrow.setFixedWidth(16)
-        self.arrow.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        self.arrow.setAlignment(
+            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+        )
 
         button_layout.addWidget(self.label)
         button_layout.addWidget(self.arrow)
@@ -687,7 +720,9 @@ class StatusDropdown(QWidget):
         layout.addWidget(self.button)
 
         self.popup = QFrame(self)
-        self.popup.setWindowFlags(Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint)
+        self.popup.setWindowFlags(
+            Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint
+        )
         self.popup.setVisible(False)
 
         popup_layout = QVBoxLayout(self.popup)
@@ -710,13 +745,13 @@ class StatusDropdown(QWidget):
             check.setVisible(status.value == self.current_status)
 
             text = QLabel(status.value)
-            
+
             option_layout.addWidget(check)
             option_layout.addWidget(text)
 
             option.check = check
             option.text = text
-            
+
             popup_layout.addWidget(option)
             self.option_items.append(option)
 
@@ -725,10 +760,11 @@ class StatusDropdown(QWidget):
         QApplication.instance().installEventFilter(self)
 
         self.statusChanged.connect(self.currentTextChanged)
-    
+
     def apply_styles(self):
         """Apply consistent styling"""
-        self.button.setStyleSheet("""
+        self.button.setStyleSheet(
+            """
             QFrame {
                 background-color: #2d2d2d;
                 border: 1px solid #3d3d3d;
@@ -743,9 +779,11 @@ class StatusDropdown(QWidget):
                 background: transparent;
                 border: none;
             }
-        """)
+        """
+        )
 
-        self.popup.setStyleSheet("""
+        self.popup.setStyleSheet(
+            """
             QFrame {
                 background-color: #2d2d2d;
                 border: 1px solid #3d3d3d;
@@ -757,10 +795,12 @@ class StatusDropdown(QWidget):
                 background: transparent;
                 border: none;
             }
-        """)
+        """
+        )
 
         for option in self.option_items:
-            option.setStyleSheet("""
+            option.setStyleSheet(
+                """
                 QFrame {
                     background-color: transparent;
                     border: none;
@@ -775,9 +815,11 @@ class StatusDropdown(QWidget):
                     background: transparent;
                     border: none;
                 }
-            """)
+            """
+            )
 
-            option.check.setStyleSheet("""
+            option.check.setStyleSheet(
+                """
                 QLabel {
                     color: #64b5f6;
                     font-weight: bold;
@@ -785,7 +827,8 @@ class StatusDropdown(QWidget):
                     background: transparent;
                     border: none;
                 }
-            """)
+            """
+            )
 
     def toggle_popup(self, event=None):
         """Toggle the popup visibility"""
