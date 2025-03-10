@@ -13,3 +13,5 @@ python-dotenv==1.0.1
 scipy==1.15.2
 sounddevice==0.5.1
 wavio==0.0.9
+pytest==8.0.0
+requests==2.31.0
