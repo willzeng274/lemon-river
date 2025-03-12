@@ -62,7 +62,6 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 3. Install dependencies
 ```bash
 pip install -r requirements.txt
-pip install -r requirements-dev.txt  # Development dependencies
 ```
 
 4. Create a branch
@@ -103,7 +102,8 @@ lemon-river/
 ├── gui/                # PyQt6 UI components
 ├── voice/              # Audio recording and transcription
 ├── tests/              # Test suite
-└── docs/               # Documentation (TODO)
+├── docs/               # Documentation
+└── requirements.txt    # Python dependencies
 ```
 
 ## Git Commit Messages
