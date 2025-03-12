@@ -11,17 +11,17 @@
 
 *Your AI-powered companion for mindful job applications*
 
-[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Contributing](#contributing) • [License](#license)
+[Technologies](#technologies) • [Features](#features) • [Installation](#installation) • [Usage](#usage) • [File Structure](#file-structure) • [Architecture](#architecture) • [Contributing](CONTRIBUTING.md)
 
 </div>
 
-## 🌟 Overview
+## Overview
 
 Lemon River is a job application assistant that helps you manage and tailor your applications while maintaining a personal touch. Unlike automated application tools, Lemon River acts as your intelligent companion, listening for voice commands and helping you organize information as you naturally browse through job postings. It's designed to be a keyboard-driven interface for efficient workflow, with some voice commands for convenience.
 
 The reason why I built this app is because I couldn't find a job application assistant that was both easy to use and customizable. I also wanted to learn how to build a desktop application in Python. Online solutions like Simplify are great, but it isn't customizable and I wanted to build my own. I used to keep track of my applications in a Notion page, but the app was very inefficient and I always had to switch between tabs to copy and paste information from the postings into my job application tracking table. Lemon River solves this by allowing you to capture information as you browse through job postings, and then organize it based on your voice commands while having access to your clipboard.
 
-## 🔧 Technologies
+## Technologies
 
 - [Ollama](https://ollama.com/) for the LLM server
 - [MLX Whisper](https://github.com/ml-explore/mlx-examples) for the speech recognition
@@ -29,7 +29,7 @@ The reason why I built this app is because I couldn't find a job application ass
 - [ripgrep](https://github.com/BurntSushi/ripgrep) for resume template indexing
 - [diff-match-patch](https://github.com/google/diff-match-patch) for resume version control
 
-## ✨ Features
+## Features
 
 - **Voice-Activated Workflow**: Just say "lemon river" to start capturing job details (configurable)
 - **Clipboard Intelligence**: Seamlessly captures and organizes information from your clipboard based on voice commands
@@ -45,7 +45,7 @@ The reason why I built this app is because I couldn't find a job application ass
   - Track changes
 - **Modern UI**: Beautiful, keyboard-driven interface for efficient workflow
 
-## 🔧 System Requirements
+## System Requirements
 
 ### macOS
 Before running the app, grant the following permissions:
@@ -64,7 +64,7 @@ Before running the app, grant the following permissions:
 - ollama (server must be running)
 - Python 3.13+ (Haven't tested with other versions)
 
-## 📦 Installation
+## Installation
 
 1. Clone the repository
 ```bash
@@ -98,7 +98,7 @@ pkill -f main.py
 ```
 
 
-## 📁 File Structure
+## File Structure
 
 ```
 lemon-river/
@@ -122,7 +122,7 @@ lemon-river/
 └── requirements.txt          # Python dependencies
 ```
 
-## 🎯 Usage
+## Usage
 
 <div align="center">
 <img src="docs/workflow.png" alt="Workflow Diagram" width="800"/>
@@ -144,7 +144,7 @@ lemon-river/
    - Compare different versions (with Google's diff-match-patch)
    - Preview applications (pdf)
 
-## 🏗️ Architecture
+## Architecture
 
 <div align="center">
 <img src="docs/architecture.png" alt="Architecture Diagram" width="800"/>
@@ -166,7 +166,7 @@ lemon-river/
 - Job window directly updates main_window after saving, so no need to refresh
 - Main window utilizes a lot of pyqtSignals to emit and listen to events to sync data between tabs and the database
 
-## 🛣️ Roadmap
+## Roadmap
 
 - [ ] Add insanely-fast-whisper for non-macOS platforms
 - [ ] Cross-platform support (Windows, Linux)
@@ -183,14 +183,18 @@ lemon-river/
 - [ ] Build pipeline with pyinstaller (it did not work well on macOS with pyinstaller)
 - [ ] Vim mode
 
-## 🤝 Contributing
+## Contributing
 
 I need contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- Built with [PyQt6](https://www.riverbankcomputing.com/software/pyqt/), [Ollama](https://ollama.ai/), and [MLX Whisper](https://github.com/ml-explore/mlx-examples)
+- [Ollama](https://ollama.ai/) for the LLM server
+- [MLX Whisper](https://github.com/ml-explore/mlx-examples) for the speech recognition
+- [PyQt6](https://www.riverbankcomputing.com/software/pyqt/intro) for the UI
+- [ripgrep](https://github.com/BurntSushi/ripgrep) for resume template indexing
+- [diff-match-patch](https://github.com/google/diff-match-patch) for resume version control
