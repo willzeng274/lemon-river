@@ -47,7 +47,6 @@ def main():
     """
     Main entry point.
     """
-    # Load environment variables at the start
     load_dotenv()
 
     logger = setup_logging("main")
@@ -61,9 +60,6 @@ def main():
     app = QApplication(sys.argv)
     # have to create the window before starting the processes, but not using it anywhere
     _main_window = MainWindow()
-    # _main_window.show()
-    # app.exec()
-    # return
 
     # can directly pass in _main_window to the JobApplicationWindow constructor
     _window = JobApplicationWindow(window_queue, _main_window)

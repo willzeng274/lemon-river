@@ -21,8 +21,6 @@ Lemon River is a job application assistant that helps you manage and tailor your
 
 The reason why I built this app is because I couldn't find a job application assistant that was both easy to use and customizable. I also wanted to learn how to build a desktop application in Python. Online solutions like Simplify are great, but it isn't customizable and I wanted to build my own. I used to keep track of my applications in a Notion page, but the app was very inefficient and I always had to switch between tabs to copy and paste information from the postings into my job application tracking table. Lemon River solves this by allowing you to capture information as you browse through job postings, and then organize it based on your voice commands while having access to your clipboard.
 
-TODO: video here
-
 ## 🔧 Technologies
 
 - [Ollama](https://ollama.com/) for the LLM server
@@ -99,6 +97,31 @@ python main.py
 pkill -f main.py
 ```
 
+
+## 📁 File Structure
+
+```
+lemon-river/
+├── agent/                      # Voice command and processing logic
+│   ├── command_handler.py      # Handles voice command interpretation and execution with LLM
+│   └── voice_processor.py      # Voice command preprocessor
+├── gui/                        # User interface components
+│   ├── job_window.py          # Job application capture window
+│   ├── main_window.py         # Main application window
+│   ├── dataclasses.py         # App related data classes
+│   ├── tabs/                  # Different tabs in the main window
+│   └── widgets/               # Reusable UI components
+├── db/                        # Database adapter, may include the db file when ran
+├── docs/                      # Documentation and images
+├── recordings/               # Temporary voice recording storage
+├── tests/                    # Unit and integration tests
+├── voice/                    # Voice processing utilities
+├── main.py                   # Entry point
+├── llm.py                    # LLM integration and tool calls
+├── utils.py                  # Shared utility functions
+└── requirements.txt          # Python dependencies
+```
+
 ## 🎯 Usage
 
 <div align="center">
@@ -142,7 +165,6 @@ pkill -f main.py
 - Very specific activation phrase, hide phrase, and save phrase since using LLMs for this is too overkill
 - Job window directly updates main_window after saving, so no need to refresh
 - Main window utilizes a lot of pyqtSignals to emit and listen to events to sync data between tabs and the database
-
 
 ## 🛣️ Roadmap
 
