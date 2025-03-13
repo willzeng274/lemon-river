@@ -1,0 +1,127 @@
+{"prompt": "add title from clipboard", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_TITLE\", \"reasoning\": \"User clearly said 'add title'\"}}"}
+{"prompt": "add the company name", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_COMPANY\", \"reasoning\": \"User explicitly mentioned 'add' and 'company'\"}}"}
+{"prompt": "add url", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_URL\", \"reasoning\": \"User explicitly said 'add url'\"}}"}
+{"prompt": "add link please", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_LINK\", \"reasoning\": \"User explicitly said 'add link'\"}}"}
+{"prompt": "add description from clipboard", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DESCRIPTION\", \"reasoning\": \"User explicitly said 'add description'\"}}"}
+{"prompt": "add the job description", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DESCRIPTION\", \"reasoning\": \"User explicitly mentioned 'add' and 'job description'\"}}"}
+{"prompt": "add location", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_LOCATION\", \"reasoning\": \"User explicitly said 'add location'\"}}"}
+{"prompt": "add the location", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_LOCATION\", \"reasoning\": \"User explicitly mentioned 'add location'\"}}"}
+{"prompt": "add duration", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DURATION\", \"reasoning\": \"User explicitly said 'add duration'\"}}"}
+{"prompt": "add a question", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_QUESTION\", \"reasoning\": \"User explicitly said 'add' and 'question'\"}}"}
+{"prompt": "add answer", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_ANSWER\", \"reasoning\": \"User explicitly said 'add answer'\"}}"}
+{"prompt": "add note", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_NOTE\", \"reasoning\": \"User explicitly said 'add note'\"}}"}
+{"prompt": "add notes", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_NOTES\", \"reasoning\": \"User explicitly said 'add notes'\"}}"}
+{"prompt": "update title", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_TITLE\", \"reasoning\": \"User said 'update title' which is equivalent to 'add title'\"}}"}
+{"prompt": "update the job title", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_TITLE\", \"reasoning\": \"User mentioned 'update' and 'job title'\"}}"}
+{"prompt": "store company name", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_COMPANY\", \"reasoning\": \"User said 'store company name' which is equivalent to 'add company'\"}}"}
+{"prompt": "store the url", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_URL\", \"reasoning\": \"User said 'store url' which is equivalent to 'add url'\"}}"}
+{"prompt": "paste title", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_TITLE\", \"reasoning\": \"User said 'paste title' which is equivalent to 'add title'\"}}"}
+{"prompt": "paste the company", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_COMPANY\", \"reasoning\": \"User said 'paste company' which is equivalent to 'add company'\"}}"}
+{"prompt": "I want to add the title", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_TITLE\", \"reasoning\": \"User expressed intent to 'add title'\"}}"}
+{"prompt": "I need to add the job description to this", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DESCRIPTION\", \"reasoning\": \"User expressed intent to add job description\"}}"}
+{"prompt": "please add the url from clipboard", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_URL\", \"reasoning\": \"User asked to 'add url'\"}}"}
+{"prompt": "I should add the company name", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_COMPANY\", \"reasoning\": \"User expressed intent to 'add company'\"}}"}
+{"prompt": "could you add the job location", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_LOCATION\", \"reasoning\": \"User asked to 'add location'\"}}"}
+{"prompt": "let's add the position duration", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DURATION\", \"reasoning\": \"User expressed intent to 'add duration'\"}}"}
+{"prompt": "add role", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_ROLE\", \"reasoning\": \"User explicitly said 'add role' which is an alias for 'add title'\"}}"}
+{"prompt": "add job title from clipboard", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_JOB_TITLE\", \"reasoning\": \"User explicitly mentioned 'add job title'\"}}"}
+{"prompt": "add the link", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_LINK\", \"reasoning\": \"User explicitly mentioned 'add link' which is an alias for 'add url'\"}}"}
+{"prompt": "um add title please", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_TITLE\", \"reasoning\": \"User said 'add title' despite filler words\"}}"}
+{"prompt": "so I want to add the company now", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_COMPANY\", \"reasoning\": \"User expressed intent to 'add company'\"}}"}
+{"prompt": "hmm I think I need to add the job description", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DESCRIPTION\", \"reasoning\": \"User expressed intent to 'add description'\"}}"}
+{"prompt": "well actually add location from clipboard", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_LOCATION\", \"reasoning\": \"User said 'add location' despite filler words\"}}"}
+{"prompt": "the clipboard has the title so add title", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_TITLE\", \"reasoning\": \"User explicitly said 'add title'\"}}"}
+{"prompt": "I copied the company so add company", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_COMPANY\", \"reasoning\": \"User explicitly said 'add company'\"}}"}
+{"prompt": "this description looks good, add description", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DESCRIPTION\", \"reasoning\": \"User explicitly said 'add description'\"}}"}
+{"prompt": "this url is what I want, add url", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_URL\", \"reasoning\": \"User explicitly said 'add url'\"}}"}
+{"prompt": "add the job's title", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_TITLE\", \"reasoning\": \"User mentioned 'add' and 'job's title'\"}}"}
+{"prompt": "add the name of the company", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_COMPANY\", \"reasoning\": \"User expressed intent to 'add company'\"}}"}
+{"prompt": "add where the job is located", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_LOCATION\", \"reasoning\": \"User expressed intent to 'add location'\"}}"}
+{"prompt": "add how long the job lasts", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DURATION\", \"reasoning\": \"User expressed intent to 'add duration'\"}}"}
+{"prompt": "add what the job entails", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DESCRIPTION\", \"reasoning\": \"User expressed intent to 'add description'\"}}"}
+{"prompt": "add the query from the application", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_QUESTION\", \"reasoning\": \"User expressed intent to 'add question'\"}}"}
+{"prompt": "add my response to their question", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_ANSWER\", \"reasoning\": \"User expressed intent to 'add answer'\"}}"}
+{"prompt": "add an important comment", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_NOTE\", \"reasoning\": \"User expressed intent to 'add note'\"}}"}
+{"prompt": "I've copied the title from the website so add title", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_TITLE\", \"reasoning\": \"User explicitly said 'add title'\"}}"}
+{"prompt": "I found the company name on LinkedIn so add company", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_COMPANY\", \"reasoning\": \"User explicitly said 'add company'\"}}"}
+{"prompt": "this job is in Seattle so add location", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_LOCATION\", \"reasoning\": \"User explicitly said 'add location'\"}}"}
+{"prompt": "it's a 6-month contract so add duration", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DURATION\", \"reasoning\": \"User explicitly said 'add duration'\"}}"}
+{"prompt": "I've copied all the requirements so add description", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DESCRIPTION\", \"reasoning\": \"User explicitly said 'add description'\"}}"}
+{"prompt": "I'm looking at the application form now and need to add a question", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_QUESTION\", \"reasoning\": \"User mentioned 'add a question'\"}}"}
+{"prompt": "I've written a response to their question and want to add answer", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_ANSWER\", \"reasoning\": \"User mentioned 'add answer'\"}}"}
+{"prompt": "I should make a note about the interview process so add note", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_NOTE\", \"reasoning\": \"User mentioned 'add note'\"}}"}
+{"prompt": "oh I see they're asking for Python experience I should add this to description", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_DESCRIPTION\", \"reasoning\": \"User mentioned 'add' and 'description'\"}}"}
+{"prompt": "this looks like a great role at Google I'll add the company", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_COMPANY\", \"reasoning\": \"User mentioned 'add the company'\"}}"}
+{"prompt": "they want 5 years of experience so I'll add that to the note", "completion": "{\"name\": \"process_command\", \"parameters\": {\"command_type\": \"ADD_NOTE\", \"reasoning\": \"User mentioned 'add' and 'note'\"}}"}
+{"prompt": "add", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User only said 'add' without specifying what to add\"}}"}
+{"prompt": "add the", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User started to specify but didn't complete the command\"}}"}
+{"prompt": "I need to add", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User expressed intent to add something but didn't specify what\"}}"}
+{"prompt": "add something", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User didn't specify what type of information to add\"}}"}
+{"prompt": "update", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User only said 'update' without specifying what to update\"}}"}
+{"prompt": "store", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User only said 'store' without specifying what to store\"}}"}
+{"prompt": "I want to add the", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User started to specify but didn't complete the command\"}}"}
+{"prompt": "add link wait", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"ADD_URL\", \"reasoning\": \"User said 'add link' but then said 'wait'\"}}"}
+{"prompt": "add title but I need to check first", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"ADD_TITLE\", \"reasoning\": \"User seems uncertain about adding the title\"}}"}
+{"prompt": "hmm add company or maybe add location", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User is uncertain about what to add\"}}"}
+{"prompt": "add note or maybe I should add a question", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User is uncertain about what to add\"}}"}
+{"prompt": "add the company but let me check the spelling", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"ADD_COMPANY\", \"reasoning\": \"User wants to add company but seems to want to wait\"}}"}
+{"prompt": "add location but I'm not sure if it's remote", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"ADD_LOCATION\", \"reasoning\": \"User is uncertain about adding the location\"}}"}
+{"prompt": "add the job um let me think", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User started to give a command but interrupted themselves\"}}"}
+{"prompt": "add I forget what I was going to say", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User started to give a command but lost their train of thought\"}}"}
+{"prompt": "add resume", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User mentioned 'add resume' which is not a valid command\"}}"}
+{"prompt": "add salary", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User mentioned 'add salary' which is not a valid command\"}}"}
+{"prompt": "add deadline", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User mentioned 'add deadline' which is not a valid command\"}}"}
+{"prompt": "title add", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User mentioned 'title' and 'add' but in the wrong order\"}}"}
+{"prompt": "company add please", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User mentioned 'company' and 'add' but in the wrong order\"}}"}
+{"prompt": "description add from clipboard", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User mentioned 'description' and 'add' but in the wrong order\"}}"}
+{"prompt": "maybe add", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User is uncertain about whether to add something\"}}"}
+{"prompt": "I could add but", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User is uncertain about whether to add something\"}}"}
+{"prompt": "should I add", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"UNKNOWN\", \"reasoning\": \"User is asking a question rather than giving a command\"}}"}
+{"prompt": "add to the title", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"ADD_TITLE\", \"reasoning\": \"User's command syntax is unusual but seems to want to add to title\"}}"}
+{"prompt": "add in the description", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"ADD_DESCRIPTION\", \"reasoning\": \"User's command syntax is unusual but seems to want to add description\"}}"}
+{"prompt": "please to add the company", "completion": "{\"name\": \"wait_for_completion\", \"parameters\": {\"command_type\": \"ADD_COMPANY\", \"reasoning\": \"User's command syntax is unusual but seems to want to add company\"}}"}
+{"prompt": "this job has good benefits", "completion": "I don't need to use any tools for this request."}
+{"prompt": "I like this company", "completion": "I don't need to use any tools for this request."}
+{"prompt": "the salary seems competitive", "completion": "I don't need to use any tools for this request."}
+{"prompt": "this job requires Python experience", "completion": "I don't need to use any tools for this request."}
+{"prompt": "they want someone with five years of experience", "completion": "I don't need to use any tools for this request."}
+{"prompt": "the location is perfect for me", "completion": "I don't need to use any tools for this request."}
+{"prompt": "this seems like a good opportunity", "completion": "I don't need to use any tools for this request."}
+{"prompt": "the job description mentions agile methodology", "completion": "I don't need to use any tools for this request."}
+{"prompt": "I'm qualified for this position", "completion": "I don't need to use any tools for this request."}
+{"prompt": "what does this company do?", "completion": "I don't need to use any tools for this request."}
+{"prompt": "I wonder if I should apply", "completion": "I don't need to use any tools for this request."}
+{"prompt": "do I have the skills for this?", "completion": "I don't need to use any tools for this request."}
+{"prompt": "is this a remote position?", "completion": "I don't need to use any tools for this request."}
+{"prompt": "when is the application deadline?", "completion": "I don't need to use any tools for this request."}
+{"prompt": "how should I tailor my resume for this?", "completion": "I don't need to use any tools for this request."}
+{"prompt": "should I mention my project experience?", "completion": "I don't need to use any tools for this request."}
+{"prompt": "looking at the job requirements", "completion": "I don't need to use any tools for this request."}
+{"prompt": "reading through the company description", "completion": "I don't need to use any tools for this request."}
+{"prompt": "checking the company website", "completion": "I don't need to use any tools for this request."}
+{"prompt": "researching this company on LinkedIn", "completion": "I don't need to use any tools for this request."}
+{"prompt": "finding more information about the role", "completion": "I don't need to use any tools for this request."}
+{"prompt": "comparing this to other opportunities", "completion": "I don't need to use any tools for this request."}
+{"prompt": "thinking about my qualifications", "completion": "I don't need to use any tools for this request."}
+{"prompt": "job title looks interesting", "completion": "I don't need to use any tools for this request."}
+{"prompt": "company has good reviews", "completion": "I don't need to use any tools for this request."}
+{"prompt": "description mentions teamwork", "completion": "I don't need to use any tools for this request."}
+{"prompt": "location is in Seattle", "completion": "I don't need to use any tools for this request."}
+{"prompt": "duration is six months", "completion": "I don't need to use any tools for this request."}
+{"prompt": "question about leadership experience", "completion": "I don't need to use any tools for this request."}
+{"prompt": "answer should focus on my project management", "completion": "I don't need to use any tools for this request."}
+{"prompt": "note that they require security clearance", "completion": "I don't need to use any tools for this request."}
+{"prompt": "I think I'll apply for this position", "completion": "I don't need to use any tools for this request."}
+{"prompt": "this job aligns with my career goals", "completion": "I don't need to use any tools for this request."}
+{"prompt": "I need to update my resume for this", "completion": "I don't need to use any tools for this request."}
+{"prompt": "I should highlight my Python experience", "completion": "I don't need to use any tools for this request."}
+{"prompt": "they're looking for someone with database knowledge", "completion": "I don't need to use any tools for this request."}
+{"prompt": "this would be a good step in my career", "completion": "I don't need to use any tools for this request."}
+{"prompt": "the title is Software Engineer", "completion": "I don't need to use any tools for this request."}
+{"prompt": "company is Google", "completion": "I don't need to use any tools for this request."}
+{"prompt": "job location is New York", "completion": "I don't need to use any tools for this request."}
+{"prompt": "position is for 12 months", "completion": "I don't need to use any tools for this request."}
+{"prompt": "description mentions machine learning", "completion": "I don't need to use any tools for this request."}
+{"prompt": "they're asking about my experience with AWS", "completion": "I don't need to use any tools for this request."}
+{"prompt": "I'll mention my team leadership experience in my answer", "completion": "I don't need to use any tools for this request."}
+{"prompt": "I should remember to follow up after applying", "completion": "I don't need to use any tools for this request."}

@@ -187,6 +187,57 @@ lemon-river/
 
 I need contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
+## Fine-Tuning
+
+Lemon River supports fine-tuning the LLM model for better voice command recognition. The fine-tuning process improves the model's ability to:
+
+1. Accurately recognize commands like "add title", "add company", etc.
+2. Determine when a command is incomplete
+3. Ignore casual conversation that isn't meant as a command
+
+### Quick Setup
+
+To quickly set up a fine-tuned model:
+
+```bash
+./fine_tuning/setup_model.sh
+```
+
+This will:
+1. Generate training data with many examples
+2. Create an optimized Ollama config
+3. Create a model using the Modelfile
+4. Update your .env file to use the new model
+
+### Fine-Tuning Workflow
+
+For more control over the fine-tuning process:
+
+1. **Generate training data:**
+   ```bash
+   python -m fine_tuning.fine_tuning --create-data-only
+   ```
+
+2. **Create a model from the Modelfile:**
+   ```bash
+   ollama create lemon-cmd -f Modelfile
+   ```
+
+3. **Configure your environment:**
+   Update your `.env` file:
+   ```
+   LLM_MODEL="lemon-cmd"
+   LLM_TEMPERATURE=0.1
+   LLM_MAX_TOKENS=512
+   LLM_TOP_P=0.95
+   LLM_TOP_K=40
+   ```
+
+4. **Test the model:**
+   ```bash
+   python -m fine_tuning.demo
+   ```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

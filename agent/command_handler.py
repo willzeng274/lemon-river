@@ -5,6 +5,7 @@ Handles voice commands for job application management
 from typing import Optional, Tuple, Dict, Any
 from enum import Enum
 import logging
+import json
 
 # pylint: disable=import-error
 import pyperclip
@@ -88,35 +89,52 @@ class CommandDeterminer:
         logger.info("Initializing CommandDeterminer")
         self.config = OllamaModelConfig(
             # model is set in the main app
-            temperature=0.1,
-            max_tokens=512,
             system_prompt="""<BEGIN SYSTEM PROMPT>
 You are a voice command processor for a job application tracking system.
 Your task is to identify explicit commands and determine if they are complete. You also must provide a reason for your decision.
 
-ONLY call process_command when ALL these conditions are met:
-1. The user explicitly mentions "add", "paste", or "update" followed by the type
+When calling tools, ALWAYS use the EXACT parameter names:
+- "command_type": Must be one of these exact values: ADD_URL, ADD_TITLE, ADD_COMPANY, ADD_LOCATION, ADD_DURATION, ADD_DESCRIPTION, ADD_QUESTION, ADD_ANSWER, ADD_NOTE, ADD_CHECK_URL, ADD_LINK, ADD_NOTES, ADD_ROLE, ADD_NODES, ADD_JOB_TITLE, UNKNOWN
+- "reasoning": A brief explanation for your decision
 
-Call wait_for_completion when:
-1. The user only said "add", "store", or "update" without specifying a command. However, keep in mind that there should be no parameters to add/update/store. It will be from the clipboard.
-2. The command is unclear
+STRICT RULES FOR USING TOOLS:
+1. ONLY call process_command when the user explicitly mentions "add", "paste", or "update" followed by a specific, complete type (like "title", "url", "company")
+2. Convert any "update" or "store" commands to their "ADD_" equivalents (e.g., "update title" should use command_type "ADD_TITLE")
+3. ALWAYS call wait_for_completion (NOT process_command) when:
+   - The user ONLY said "add" without specifying what to add
+   - The user said something like "I need to add" without specifying what
+   - The user said "add the" without completing the command
+   - The command is unclear or ambiguous
+   - The user expressed uncertainty about the command (e.g., "add title but I'm not sure")
+   - The user said "add link wait" or similar with "wait" indicating uncertainty
+4. DO NOT call ANY tool if the user is just making a statement or asking a question 
+   - For example: "this job has good benefits" or "I like this company" should NOT trigger ANY tool calls
+   - DO NOT respond with ANY tool call for casual conversation
 
-IMPORTANT:
-- If the user says "add", "store", or "update", lean towards processing the command that the user is most likely to be adding.
-- "store" and "update" are synonymous with "add" for commands.
-- There is no need to ask the user to provide more information, there are no parameters to add/update/store. It will be from the clipboard.
+EXAMPLES OF WHEN TO USE WAIT_FOR_COMPLETION:
+- "add"
+- "I need to add"
+- "add the"
+- "add title but I'm not sure"
+- "add link wait"
 
-MOST IMPORTANT:
-- If the user is only talking about the description, note, question, answer, company, location, etc, DO NOT process the command unless "add", "store", or "update" is explicitly mentioned.
-- ONLY call process_command if the user clearly states "add", "store", or "update".
-- Use the "UNKNOWN" command if the user is not talking about a specific command.
-- You do not have to call any tools if the user is not talking about a specific command.
+EXAMPLES OF STATEMENTS THAT SHOULD NOT TRIGGER ANY TOOL CALLS:
+- "this job has good benefits"
+- "I like this company"
 
-Available commands:
-ADD_URL, ADD_TITLE, ADD_COMPANY, ADD_LOCATION, ADD_DURATION,
-ADD_DESCRIPTION, ADD_QUESTION, ADD_ANSWER, ADD_NOTE, ADD_CHECK_URL,
-ADD_LINK, ADD_NOTES, ADD_ROLE, ADD_NODES, ADD_JOB_TITLE, UNKNOWN
+WHEN DETERMINING COMMAND TYPE:
+- For "add title", use ADD_TITLE
+- For "add link" or "add url", use ADD_URL (or ADD_LINK)
+- For "add company", use ADD_COMPANY
+- For "add location", use ADD_LOCATION
+- For "add duration", use ADD_DURATION
+- For "add description", use ADD_DESCRIPTION
+- For "add question", use ADD_QUESTION
+- For "add answer", use ADD_ANSWER
+- For "add note" or "add notes", use ADD_NOTE (or ADD_NOTES)
+- For unclear commands, use UNKNOWN
 
+Remember, the clipboard will contain the relevant content - there are no parameters to provide in the command.
 <END SYSTEM PROMPT>
 """,
             # Examples were detrimental to the model's performance for some reason
@@ -161,14 +179,34 @@ ADD_LINK, ADD_NOTES, ADD_ROLE, ADD_NODES, ADD_JOB_TITLE, UNKNOWN
                 tool_call = response["message"]["tool_calls"][0]
                 logger.info("Tool call received: %s", tool_call["function"]["name"])
 
+                # Extract arguments - could be a string or dict
                 args = tool_call["function"]["arguments"]
-                logger.debug("Tool call arguments: %s", args)
+                if not isinstance(args, dict):
+                    try:
+                        args = json.loads(args)
+                    except (json.JSONDecodeError, TypeError):
+                        logger.error("Error parsing tool arguments: Invalid arguments format")
+                        return CommandType.UNKNOWN, False
+                
+                logger.debug("Parsed arguments: %s", args)
+                
+                # Extract command_type from different possible locations
+                cmd_type_str = None
+                if "command_type" in args:
+                    cmd_type_str = args["command_type"]
+                elif "parameters" in args and "command_type" in args["parameters"]:
+                    cmd_type_str = args["parameters"]["command_type"]
+                
+                if not cmd_type_str:
+                    logger.error("Missing command_type in arguments")
+                    return CommandType.UNKNOWN, False
 
                 try:
-                    raw_cmd_type = args["command_type"]
-                    if raw_cmd_type.startswith("UPDATE_"):
-                        raw_cmd_type = raw_cmd_type.replace("UPDATE_", "ADD_")
-                    cmd_type = CommandType[raw_cmd_type]
+                    # Convert string format if needed (like UPDATE_ to ADD_)
+                    if cmd_type_str.startswith("UPDATE_"):
+                        cmd_type_str = cmd_type_str.replace("UPDATE_", "ADD_")
+                    
+                    cmd_type = CommandType[cmd_type_str]
                     is_complete = tool_call["function"]["name"] == "process_command"
                     logger.info(
                         "Determined command: type=%s, complete=%s",
@@ -177,7 +215,7 @@ ADD_LINK, ADD_NOTES, ADD_ROLE, ADD_NODES, ADD_JOB_TITLE, UNKNOWN
                     )
                     return cmd_type, is_complete
                 except (KeyError, ValueError) as e:
-                    logger.error("Error parsing tool arguments: %s", e)
+                    logger.error("Error parsing command type: %s", e)
                     return CommandType.UNKNOWN, False
             else:
                 logger.warning("No tool calls in response")

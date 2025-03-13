@@ -101,6 +101,36 @@ class Config:
         return Config.get_str("LLM_MODEL", "llama3.2")
 
     @staticmethod
+    def llm_max_tokens() -> int:
+        """Get LLM max tokens parameter."""
+        return Config.get_int("LLM_MAX_TOKENS", 512)
+    
+    @staticmethod
+    def llm_temperature() -> float:
+        """Get LLM temperature parameter."""
+        return Config.get_float("LLM_TEMPERATURE", 0.1)
+    
+    @staticmethod
+    def llm_top_p() -> float:
+        """Get LLM top_p parameter."""
+        return Config.get_float("LLM_TOP_P", 0.95)
+    
+    @staticmethod
+    def llm_top_k() -> int:
+        """Get LLM top_k parameter."""
+        return Config.get_int("LLM_TOP_K", 40)
+    
+    @staticmethod
+    def fine_tuning_enabled() -> bool:
+        """Check if fine-tuning is enabled."""
+        return Config.get_bool("FINE_TUNING_ENABLED", False)
+    
+    @staticmethod
+    def fine_tuned_model_path() -> str:
+        """Get the path to fine-tuned models."""
+        return Config.get_str("FINE_TUNED_MODEL_PATH", "fine_tuning/models")
+
+    @staticmethod
     def audio_recording_sample_rate() -> int:
         """Get audio recording sample rate."""
         return Config.get_int("AUDIO_RECORDING_SAMPLE_RATE", 44100)
